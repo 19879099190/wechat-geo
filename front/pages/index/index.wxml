@@ -1,0 +1,88 @@
+<!--pages/index/index.wxml-->
+<view class="container">
+  <!-- 顶部横幅 -->
+  <view class="banner">
+    <view class="banner-title">华农掌中行</view>
+    <view class="banner-subtitle">智慧校园 · 便捷出行</view>
+  </view>
+
+  <!-- 功能入口 -->
+  <view class="function-grid">
+    <view class="function-item" bindtap="goToNavigation">
+      <view class="function-icon">🧭</view>
+      <view class="function-name">路线规划</view>
+    </view>
+
+    <view class="function-item" bindtap="goToMap">
+      <view class="function-icon">📍</view>
+      <view class="function-name">地图浏览</view>
+    </view>
+
+    <view class="function-item" bindtap="goToFlower">
+      <view class="function-icon">🌸</view>
+      <view class="function-name">赏花专题</view>
+    </view>
+
+    <view class="function-item" bindtap="goToPoi">
+      <view class="function-icon">🏫</view>
+      <view class="function-name">校园发现</view>
+    </view>
+
+    <view class="function-item" bindtap="goToCharging">
+      <view class="function-icon">🔋</view>
+      <view class="function-name">充电桩</view>
+    </view>
+
+    <view class="function-item" bindtap="goToBus">
+      <view class="function-icon">🚌</view>
+      <view class="function-name">校巴服务</view>
+    </view>
+    <view class="function-item" bindtap="goToParking">
+      <view class="function-icon">🅿️</view>
+      <view class="function-name">校园停车</view>
+    </view>
+  </view>
+
+  <!-- 快捷服务 -->
+  <view class="card">
+    <view class="card-title">快捷服务</view>
+    <view class="service-list">
+      <view class="service-item" bindtap="onCategoryTap" data-type="canteen">
+        <text class="service-icon">🍜</text>
+        <text class="service-name">食堂</text>
+      </view>
+      <view class="service-item" bindtap="onCategoryTap" data-type="library">
+        <text class="service-icon">📚</text>
+        <text class="service-name">图书馆</text>
+      </view>
+      <view class="service-item" bindtap="onCategoryTap" data-type="sports">
+        <text class="service-icon">🏃</text>
+        <text class="service-name">运动场</text>
+      </view>
+      <view class="service-item" bindtap="onCategoryTap" data-type="scenic">
+        <text class="service-icon">🌸</text>
+        <text class="service-name">景点</text>
+      </view>
+      
+    </view>
+  </view>
+
+  <!-- 校园动态 -->
+  <view class="card">
+    <view class="card-header">
+    <view class="card-title">校园动态</view>
+      <view class="more-link" bindtap="goToNews">
+        <text>更多</text>
+        <text class="arrow">›</text>
+      </view>
+    </view>
+    <view class="news-item" bindtap="goToNewsDetail" data-id="1">
+      <view class="news-title">华农校园导航小程序正式上线</view>
+      <view class="news-time">2026-12-31</view>
+    </view>
+    <view class="news-item" bindtap="goToNewsDetail" data-id="2">
+      <view class="news-title">新增充电桩投入使用</view>
+      <view class="news-time">2027-01-31</view>
+    </view>
+  </view>
+</view>

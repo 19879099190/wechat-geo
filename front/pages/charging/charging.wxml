@@ -1,0 +1,66 @@
+<!--pages/charging/charging.wxml-->
+<view class="container">
+  <view class="suggestion-entry" bindtap="goToSuggestion">
+    <view><view class="entry-title">没找到合适的充电点？</view><view class="entry-desc">提交新增充电点建议</view></view>
+    <text class="entry-arrow">›</text>
+  </view>
+  <!-- 顶部筛选 -->
+  <view class="filter-bar">
+    <picker mode="selector" range="{{statusOptions}}" range-key="label" value="{{statusFilter + 1}}" bindchange="onStatusChange">
+      <view class="filter-btn">
+        <text>{{statusOptions[statusFilter + 1].label}}</text>
+        <text class="arrow">▼</text>
+      </view>
+    </picker>
+  </view>
+
+  <!-- 充电桩列表 -->
+  <view class="station-list">
+    <view wx:if="{{loading}}" class="loading">
+      <text>加载中...</text>
+    </view>
+
+    <view wx:elif="{{stationList.length === 0}}" class="empty">
+      <text>暂无充电桩数据</text>
+    </view>
+
+    <view wx:else>
+      <view class="station-item" wx:for="{{stationList}}" wx:key="id">
+        <view class="station-header" bindtap="viewDetail" data-id="{{item.id}}">
+          <view class="station-name">{{item.name}}</view>
+          <view class="station-status" style="color: {{statusColor[item.status]}}">
+            {{statusText[item.status]}}
+          </view>
+        </view>
+
+        <view class="station-info">
+          <view class="info-item">
+            <text class="info-label">📍 位置：</text>
+            <text class="info-value">{{item.location}}</text>
+          </view>
+          <view class="info-item">
+            <text class="info-label">⚡ 功率：</text>
+            <text class="info-value">{{item.power}}kW</text>
+          </view>
+          <view class="info-item">
+            <text class="info-label">🔌 插座：</text>
+            <text class="info-value">{{item.available_slots}}/{{item.total_slots}} 可用</text>
+          </view>
+          <view class="info-item">
+            <text class="info-label">💰 价格：</text>
+            <text class="info-value">{{item.price}}元/度</text>
+          </view>
+        </view>
+
+        <view class="station-actions">
+          <button class="action-btn" size="mini" bindtap="navigateToStation" data-station="{{item}}">
+            导航
+          </button>
+          <button class="action-btn primary" size="mini" bindtap="reserveStation" data-station="{{item}}" disabled="{{item.status !== 0}}">
+            {{item.status === 0 ? '预约' : '不可用'}}
+          </button>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

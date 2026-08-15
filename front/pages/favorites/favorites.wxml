@@ -1,0 +1,65 @@
+<!--pages/favorites/favorites.wxml-->
+<view class="container">
+  <view wx:if="{{loading}}" class="loading">
+    <text>加载中...</text>
+  </view>
+
+  <view wx:elif="{{favoriteList.length === 0}}" class="empty">
+    <view class="empty-icon">⭐</view>
+    <view class="empty-text">还没有收藏任何POI</view>
+    <view class="empty-tip">去发现页面收藏喜欢的地点吧</view>
+  </view>
+
+  <view wx:else class="favorite-list">
+    <view 
+      wx:for="{{favoriteList}}" 
+      wx:key="id" 
+      class="favorite-item"
+    >
+      <view class="item-content" bindtap="viewDetail" data-id="{{item.id}}">
+        <view class="item-header">
+          <view class="item-name">{{item.name}}</view>
+          <view class="item-type">{{item.type}}</view>
+        </view>
+        
+        <view class="item-desc">{{item.description}}</view>
+        
+        <view class="item-info">
+          <view class="info-item">
+            <text class="info-icon">⭐</text>
+            <text>{{item.rating || '暂无评分'}}</text>
+          </view>
+          <view wx:if="{{item.open_time}}" class="info-item">
+            <text class="info-icon">🕐</text>
+            <text>{{item.open_time}}</text>
+          </view>
+        </view>
+        
+        <view class="item-time">
+          收藏于 {{item.favorited_at}}
+        </view>
+      </view>
+      
+      <view class="item-actions">
+        <button 
+          class="action-btn navigate-btn" 
+          bindtap="navigateTo" 
+          data-poi="{{item}}"
+          catchtap="navigateTo"
+        >
+          📍 导航
+        </button>
+        <button 
+          class="action-btn cancel-btn" 
+          bindtap="removeFavorite" 
+          data-id="{{item.id}}"
+          data-name="{{item.name}}"
+          catchtap="removeFavorite"
+        >
+          取消收藏
+        </button>
+      </view>
+    </view>
+  </view>
+</view>
+

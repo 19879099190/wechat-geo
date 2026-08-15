@@ -1,0 +1,112 @@
+<!--pages/poi/edit/edit.wxml-->
+<view class="container">
+  <view class="header">
+    <text class="title">{{isEdit ? '编辑POI' : '添加POI'}}</text>
+  </view>
+
+  <view class="form">
+    <!-- 名称 -->
+    <view class="form-item">
+      <view class="label required">名称</view>
+      <input 
+        class="input" 
+        placeholder="请输入POI名称" 
+        value="{{formData.name}}"
+        bindinput="onNameInput"
+      />
+    </view>
+
+    <!-- 类型 -->
+    <view class="form-item">
+      <view class="label required">类型</view>
+      <picker 
+        mode="selector" 
+        range="{{types}}" 
+        range-key="label"
+        value="{{typeIndex}}"
+        bindchange="onTypeChange"
+      >
+        <view class="picker">
+          {{types[typeIndex].label}}
+        </view>
+      </picker>
+    </view>
+
+    <!-- 纬度 -->
+    <view class="form-item">
+      <view class="label required">纬度</view>
+      <input 
+        class="input" 
+        type="digit"
+        placeholder="请输入纬度" 
+        value="{{formData.latitude}}"
+        bindinput="onLatitudeInput"
+      />
+    </view>
+
+    <!-- 经度 -->
+    <view class="form-item">
+      <view class="label required">经度</view>
+      <view class="input-with-btn">
+        <input 
+          class="input flex" 
+          type="digit"
+          placeholder="请输入经度" 
+          value="{{formData.longitude}}"
+          bindinput="onLongitudeInput"
+        />
+        <button class="location-btn" bindtap="getCurrentLocation">
+          📍 获取当前位置
+        </button>
+      </view>
+    </view>
+
+    <!-- 描述 -->
+    <view class="form-item">
+      <view class="label">描述</view>
+      <textarea 
+        class="textarea" 
+        placeholder="请输入描述信息" 
+        value="{{formData.description}}"
+        bindinput="onDescriptionInput"
+        maxlength="500"
+      />
+    </view>
+
+    <view class="form-item">
+      <view class="label">POI 点评</view>
+      <textarea class="textarea" placeholder="请输入对该地点的点评" value="{{formData.comment}}" bindinput="onCommentInput" maxlength="500" />
+    </view>
+
+    <!-- 评分 -->
+    <view class="form-item">
+      <view class="label">评分 (0-5)</view>
+      <input 
+        class="input" 
+        type="digit"
+        placeholder="0" 
+        value="{{formData.rating}}"
+        bindinput="onRatingInput"
+      />
+    </view>
+
+    <!-- 开放时间 -->
+    <view class="form-item">
+      <view class="label">开放时间</view>
+      <input 
+        class="input" 
+        placeholder="例如: 08:00-22:00" 
+        value="{{formData.openTime}}"
+        bindinput="onOpenTimeInput"
+      />
+    </view>
+  </view>
+
+  <!-- 提交按钮 -->
+  <view class="submit-section">
+    <button class="submit-btn" bindtap="submitForm">
+      {{isEdit ? '保存修改' : '添加POI'}}
+    </button>
+  </view>
+</view>
+

@@ -1,0 +1,6149 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "华农掌中行 API",
+    "version": "1.0.0",
+    "description": "由 back/server.js 与 back/routes/*.js 导出的接口定义（2026-08-14）。"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "本地后端（以 PORT 环境变量为准）"
+    }
+  ],
+  "tags": [
+    {
+      "name": "用户认证"
+    },
+    {
+      "name": "POI"
+    },
+    {
+      "name": "GIS"
+    },
+    {
+      "name": "地图代理"
+    },
+    {
+      "name": "路线"
+    },
+    {
+      "name": "收藏"
+    },
+    {
+      "name": "校巴"
+    },
+    {
+      "name": "充电"
+    },
+    {
+      "name": "停车场"
+    },
+    {
+      "name": "赏花"
+    },
+    {
+      "name": "校园资讯"
+    },
+    {
+      "name": "管理员账号"
+    },
+    {
+      "name": "后台业务管理"
+    }
+  ],
+  "paths": {
+    "/api/auth/register": {
+      "post": {
+        "tags": [
+          "用户认证"
+        ],
+        "summary": "用户注册",
+        "description": "手机号须为中国大陆手机号；密码至少 6 位",
+        "operationId": "post_api_auth_register",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "phone": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "phone",
+                  "password"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "tags": [
+          "用户认证"
+        ],
+        "summary": "用户登录",
+        "description": "成功后返回有效期 7 天的 JWT",
+        "operationId": "post_api_auth_login",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "phone": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "phone",
+                  "password"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/userinfo": {
+      "get": {
+        "tags": [
+          "用户认证"
+        ],
+        "summary": "获取当前用户信息",
+        "description": "Authorization 头直接传 token，不加 Bearer 前缀",
+        "operationId": "get_api_auth_userinfo",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "security": [
+          {
+            "userToken": []
+          }
+        ]
+      }
+    },
+    "/api/poi/list": {
+      "get": {
+        "tags": [
+          "POI"
+        ],
+        "summary": "POI 分页列表",
+        "operationId": "get_api_poi_list",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "keyword",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "latitude",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "longitude",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "radius",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "default": 5000
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "default": 10
+            }
+          }
+        ]
+      }
+    },
+    "/api/poi/search": {
+      "get": {
+        "tags": [
+          "POI"
+        ],
+        "summary": "搜索 POI",
+        "operationId": "get_api_poi_search",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "keyword",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "minRating",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "latitude",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "longitude",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "radius",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "default": 20
+            }
+          }
+        ]
+      }
+    },
+    "/api/poi/search/hot": {
+      "get": {
+        "tags": [
+          "POI"
+        ],
+        "summary": "热门搜索",
+        "operationId": "get_api_poi_search_hot",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        }
+      }
+    },
+    "/api/poi/search/suggest": {
+      "get": {
+        "tags": [
+          "POI"
+        ],
+        "summary": "搜索联想",
+        "operationId": "get_api_poi_search_suggest",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "keyword",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/poi/detail/{id}": {
+      "get": {
+        "tags": [
+          "POI"
+        ],
+        "summary": "POI 详情",
+        "description": "userId 用于返回收藏状态",
+        "operationId": "get_api_poi_detail_id",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ]
+      }
+    },
+    "/api/gis/buffer-analysis": {
+      "post": {
+        "tags": [
+          "GIS"
+        ],
+        "summary": "缓冲区分析",
+        "operationId": "post_api_gis_buffer_analysis",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "latitude": {
+                    "type": "number"
+                  },
+                  "longitude": {
+                    "type": "number"
+                  },
+                  "radius": {
+                    "type": "number"
+                  },
+                  "type": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "latitude",
+                  "longitude",
+                  "radius"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/gis/nearby-search": {
+      "get": {
+        "tags": [
+          "GIS"
+        ],
+        "summary": "周边搜索",
+        "operationId": "get_api_gis_nearby_search",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "latitude",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "longitude",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "radius",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "default": 1000
+            }
+          },
+          {
+            "name": "types",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          },
+          {
+            "name": "keyword",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/gis/heatmap": {
+      "get": {
+        "tags": [
+          "GIS"
+        ],
+        "summary": "热力图数据",
+        "operationId": "get_api_gis_heatmap",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "poi"
+            }
+          }
+        ]
+      }
+    },
+    "/api/gis/nearest-facility": {
+      "get": {
+        "tags": [
+          "GIS"
+        ],
+        "summary": "最近设施",
+        "operationId": "get_api_gis_nearest_facility",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "latitude",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "longitude",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "facilityType",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "default": 5
+            }
+          }
+        ]
+      }
+    },
+    "/api/map/direction": {
+      "post": {
+        "tags": [
+          "地图代理"
+        ],
+        "summary": "腾讯地图路线规划代理",
+        "description": "第三方 Key 仅由后端 TENCENT_MAP_KEY 注入",
+        "operationId": "post_api_map_direction",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "mode": {
+                    "type": "string",
+                    "default": "walking"
+                  },
+                  "from": {
+                    "type": "object",
+                    "additionalProperties": true
+                  },
+                  "to": {
+                    "type": "object",
+                    "additionalProperties": true
+                  },
+                  "policy": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "from",
+                  "to"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/map/search": {
+      "get": {
+        "tags": [
+          "地图代理"
+        ],
+        "summary": "地点搜索代理",
+        "operationId": "get_api_map_search",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "keyword",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "latitude",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "longitude",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "radius",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "default": 1000
+            }
+          },
+          {
+            "name": "region",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "default": 10
+            }
+          }
+        ]
+      }
+    },
+    "/api/map/reverse-geocoder": {
+      "get": {
+        "tags": [
+          "地图代理"
+        ],
+        "summary": "逆地理编码代理",
+        "operationId": "get_api_map_reverse_geocoder",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "latitude",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "longitude",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "getPoi",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/map/suggestion": {
+      "get": {
+        "tags": [
+          "地图代理"
+        ],
+        "summary": "地点输入联想代理",
+        "operationId": "get_api_map_suggestion",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "keyword",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "region",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "default": 10
+            }
+          }
+        ]
+      }
+    },
+    "/api/map/geocoder": {
+      "get": {
+        "tags": [
+          "地图代理"
+        ],
+        "summary": "地址编码代理",
+        "operationId": "get_api_map_geocoder",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "address",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "region",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/map/distance": {
+      "get": {
+        "tags": [
+          "地图代理"
+        ],
+        "summary": "路线距离计算代理",
+        "operationId": "get_api_map_distance",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "mode",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "walking"
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          }
+        ]
+      }
+    },
+    "/api/route/plan": {
+      "post": {
+        "tags": [
+          "路线"
+        ],
+        "summary": "路线规划",
+        "description": "from/to 为含 name、latitude、longitude 的对象",
+        "operationId": "post_api_route_plan",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "from": {
+                    "type": "object",
+                    "additionalProperties": true
+                  },
+                  "to": {
+                    "type": "object",
+                    "additionalProperties": true
+                  },
+                  "mode": {
+                    "type": "string",
+                    "default": "walking"
+                  },
+                  "alternatives": {
+                    "type": "boolean",
+                    "default": true
+                  }
+                },
+                "required": [
+                  "from",
+                  "to"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/route/bus": {
+      "post": {
+        "tags": [
+          "路线"
+        ],
+        "summary": "校巴路线规划",
+        "operationId": "post_api_route_bus",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "from": {
+                    "type": "object",
+                    "additionalProperties": true
+                  },
+                  "to": {
+                    "type": "object",
+                    "additionalProperties": true
+                  }
+                },
+                "required": [
+                  "from",
+                  "to"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/route/save": {
+      "post": {
+        "tags": [
+          "路线"
+        ],
+        "summary": "保存常用路线",
+        "operationId": "post_api_route_save",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "userId": {
+                    "type": "number"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "from": {
+                    "type": "object",
+                    "additionalProperties": true
+                  },
+                  "to": {
+                    "type": "object",
+                    "additionalProperties": true
+                  },
+                  "mode": {
+                    "type": "string",
+                    "default": "walking"
+                  },
+                  "duration": {
+                    "type": "number"
+                  },
+                  "distance": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "userId",
+                  "from",
+                  "to"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/route/my-routes": {
+      "get": {
+        "tags": [
+          "路线"
+        ],
+        "summary": "常用路线列表",
+        "operationId": "get_api_route_my_routes",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ]
+      }
+    },
+    "/api/route/delete": {
+      "delete": {
+        "tags": [
+          "路线"
+        ],
+        "summary": "删除常用路线",
+        "operationId": "delete_api_route_delete",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "routeId": {
+                    "type": "number"
+                  },
+                  "userId": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "routeId",
+                  "userId"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/favorites/add": {
+      "post": {
+        "tags": [
+          "收藏"
+        ],
+        "summary": "添加收藏",
+        "operationId": "post_api_favorites_add",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "userId": {
+                    "type": "number"
+                  },
+                  "poiId": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "userId",
+                  "poiId"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/favorites/remove": {
+      "post": {
+        "tags": [
+          "收藏"
+        ],
+        "summary": "取消收藏",
+        "operationId": "post_api_favorites_remove",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "userId": {
+                    "type": "number"
+                  },
+                  "poiId": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "userId",
+                  "poiId"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/favorites/list": {
+      "get": {
+        "tags": [
+          "收藏"
+        ],
+        "summary": "收藏列表",
+        "operationId": "get_api_favorites_list",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ]
+      }
+    },
+    "/api/favorites/check": {
+      "get": {
+        "tags": [
+          "收藏"
+        ],
+        "summary": "检查收藏状态",
+        "operationId": "get_api_favorites_check",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "poiId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ]
+      }
+    },
+    "/api/bus/lines": {
+      "get": {
+        "tags": [
+          "校巴"
+        ],
+        "summary": "校巴线路列表",
+        "operationId": "get_api_bus_lines",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        }
+      }
+    },
+    "/api/bus/line/{id}": {
+      "get": {
+        "tags": [
+          "校巴"
+        ],
+        "summary": "线路详情与站点",
+        "operationId": "get_api_bus_line_id",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ]
+      }
+    },
+    "/api/bus/line/{id}/route": {
+      "get": {
+        "tags": [
+          "校巴"
+        ],
+        "summary": "线路地图轨迹",
+        "description": "依赖腾讯地图 Key，结果会写入缓存",
+        "operationId": "get_api_bus_line_id_route",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ]
+      }
+    },
+    "/api/bus/realtime/{lineId}": {
+      "get": {
+        "tags": [
+          "校巴"
+        ],
+        "summary": "车辆实时位置（模拟）",
+        "operationId": "get_api_bus_realtime_lineId",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "lineId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ]
+      }
+    },
+    "/api/bus/arrival": {
+      "get": {
+        "tags": [
+          "校巴"
+        ],
+        "summary": "预计到站时间（模拟）",
+        "operationId": "get_api_bus_arrival",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "lineId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "stopId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ]
+      }
+    },
+    "/api/bus/subscribe": {
+      "post": {
+        "tags": [
+          "校巴"
+        ],
+        "summary": "订阅到站提醒",
+        "operationId": "post_api_bus_subscribe",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "lineId": {
+                    "type": "number"
+                  },
+                  "stopId": {
+                    "type": "number"
+                  },
+                  "userId": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "lineId",
+                  "stopId",
+                  "userId"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/bus/subscribe/{id}": {
+      "delete": {
+        "tags": [
+          "校巴"
+        ],
+        "summary": "取消到站订阅",
+        "operationId": "delete_api_bus_subscribe_id",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ]
+      }
+    },
+    "/api/charging/stations": {
+      "get": {
+        "tags": [
+          "充电"
+        ],
+        "summary": "充电桩列表",
+        "operationId": "get_api_charging_stations",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "latitude",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "longitude",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ]
+      }
+    },
+    "/api/charging/reserve": {
+      "post": {
+        "tags": [
+          "充电"
+        ],
+        "summary": "预约充电桩",
+        "description": "userId 也可由 userid 请求头传入；未传时当前实现默认为 1",
+        "operationId": "post_api_charging_reserve",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "stationId": {
+                    "type": "number"
+                  },
+                  "startTime": {
+                    "type": "string"
+                  },
+                  "duration": {
+                    "type": "number",
+                    "default": 60
+                  },
+                  "phone": {
+                    "type": "string"
+                  },
+                  "userId": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "stationId",
+                  "startTime"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/charging/station/{id}": {
+      "get": {
+        "tags": [
+          "充电"
+        ],
+        "summary": "充电桩详情",
+        "operationId": "get_api_charging_station_id",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ]
+      }
+    },
+    "/api/charging/cancel/{id}": {
+      "post": {
+        "tags": [
+          "充电"
+        ],
+        "summary": "取消预约",
+        "operationId": "post_api_charging_cancel_id",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ]
+      }
+    },
+    "/api/charging/records": {
+      "get": {
+        "tags": [
+          "充电"
+        ],
+        "summary": "用户充电记录",
+        "operationId": "get_api_charging_records",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ]
+      }
+    },
+    "/api/charging/reservation": {
+      "get": {
+        "tags": [
+          "充电"
+        ],
+        "summary": "用户当前预约",
+        "operationId": "get_api_charging_reservation",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "stationId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ]
+      }
+    },
+    "/api/charging/reservations": {
+      "get": {
+        "tags": [
+          "充电"
+        ],
+        "summary": "用户全部预约",
+        "operationId": "get_api_charging_reservations",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ]
+      }
+    },
+    "/api/charging/suggestion": {
+      "post": {
+        "tags": [
+          "充电"
+        ],
+        "summary": "提交充电桩规划建议",
+        "description": "locationName 与 location 至少传一个",
+        "operationId": "post_api_charging_suggestion",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "userId": {
+                    "type": "number"
+                  },
+                  "location": {
+                    "type": "string"
+                  },
+                  "locationName": {
+                    "type": "string"
+                  },
+                  "latitude": {
+                    "type": "number"
+                  },
+                  "longitude": {
+                    "type": "number"
+                  },
+                  "reason": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "userId",
+                  "reason"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/charging/suggestions": {
+      "get": {
+        "tags": [
+          "充电"
+        ],
+        "summary": "用户规划建议列表",
+        "operationId": "get_api_charging_suggestions",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ]
+      }
+    },
+    "/api/charging/start": {
+      "post": {
+        "tags": [
+          "充电"
+        ],
+        "summary": "开始充电",
+        "operationId": "post_api_charging_start",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "userId": {
+                    "type": "number"
+                  },
+                  "stationId": {
+                    "type": "number"
+                  },
+                  "reservationId": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "userId",
+                  "stationId"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/charging/stop": {
+      "post": {
+        "tags": [
+          "充电"
+        ],
+        "summary": "结束充电",
+        "operationId": "post_api_charging_stop",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "userId": {
+                    "type": "number"
+                  },
+                  "stationId": {
+                    "type": "number"
+                  },
+                  "recordId": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "userId",
+                  "stationId",
+                  "recordId"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/charging/cancel-charging": {
+      "post": {
+        "tags": [
+          "充电"
+        ],
+        "summary": "取消进行中的充电",
+        "operationId": "post_api_charging_cancel_charging",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "userId": {
+                    "type": "number"
+                  },
+                  "stationId": {
+                    "type": "number"
+                  },
+                  "recordId": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "userId",
+                  "stationId",
+                  "recordId"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/charging/stats": {
+      "get": {
+        "tags": [
+          "充电"
+        ],
+        "summary": "充电统计",
+        "operationId": "get_api_charging_stats",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        }
+      }
+    },
+    "/api/parking/list": {
+      "get": {
+        "tags": [
+          "停车场"
+        ],
+        "summary": "停车场列表",
+        "description": "type: bike / ebike / car",
+        "operationId": "get_api_parking_list",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/parking/detail/{id}": {
+      "get": {
+        "tags": [
+          "停车场"
+        ],
+        "summary": "停车场详情",
+        "operationId": "get_api_parking_detail_id",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ]
+      }
+    },
+    "/api/flower/spots": {
+      "get": {
+        "tags": [
+          "赏花"
+        ],
+        "summary": "赏花点列表",
+        "operationId": "get_api_flower_spots",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "category",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "latitude",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "longitude",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "radius",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ]
+      }
+    },
+    "/api/flower/spot/{id}": {
+      "get": {
+        "tags": [
+          "赏花"
+        ],
+        "summary": "赏花点详情",
+        "operationId": "get_api_flower_spot_id",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ]
+      }
+    },
+    "/api/flower/routes": {
+      "get": {
+        "tags": [
+          "赏花"
+        ],
+        "summary": "赏花路线列表",
+        "operationId": "get_api_flower_routes",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        }
+      }
+    },
+    "/api/flower/checkin": {
+      "post": {
+        "tags": [
+          "赏花"
+        ],
+        "summary": "赏花打卡",
+        "operationId": "post_api_flower_checkin",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "userId": {
+                    "type": "number"
+                  },
+                  "spotId": {
+                    "type": "number"
+                  },
+                  "images": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  },
+                  "comment": {
+                    "type": "string"
+                  },
+                  "rating": {
+                    "type": "number",
+                    "default": 5
+                  }
+                },
+                "required": [
+                  "userId",
+                  "spotId"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/flower/upload-checkin": {
+      "post": {
+        "tags": [
+          "赏花"
+        ],
+        "summary": "上传打卡图片",
+        "description": "multipart/form-data",
+        "operationId": "post_api_flower_upload_checkin",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "spotId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "image": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                },
+                "required": [
+                  "image"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/flower/user-checkin-status": {
+      "get": {
+        "tags": [
+          "赏花"
+        ],
+        "summary": "用户打卡状态",
+        "operationId": "get_api_flower_user_checkin_status",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "spotId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ]
+      }
+    },
+    "/api/flower/checkins/{spotId}": {
+      "get": {
+        "tags": [
+          "赏花"
+        ],
+        "summary": "赏花点打卡列表",
+        "operationId": "get_api_flower_checkins_spotId",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "spotId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ]
+      }
+    },
+    "/api/flower/routes/{id}": {
+      "get": {
+        "tags": [
+          "赏花"
+        ],
+        "summary": "赏花路线详情",
+        "operationId": "get_api_flower_routes_id",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ]
+      }
+    },
+    "/api/news/{id}": {
+      "get": {
+        "tags": [
+          "校园资讯"
+        ],
+        "summary": "资讯详情",
+        "description": "当前代码中该路由先于 /list 注册，GET /api/news/list 会被误当作详情请求",
+        "operationId": "get_api_news_id",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ]
+      }
+    },
+    "/api/news/list": {
+      "get": {
+        "tags": [
+          "校园资讯"
+        ],
+        "summary": "资讯分页列表",
+        "description": "受路由顺序问题影响，当前可能无法访问",
+        "operationId": "get_api_news_list",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "default": 10
+            }
+          }
+        ]
+      }
+    },
+    "/api/admin/login": {
+      "post": {
+        "tags": [
+          "管理员账号"
+        ],
+        "summary": "管理员登录",
+        "operationId": "post_api_admin_login",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "username",
+                  "password"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/info": {
+      "get": {
+        "tags": [
+          "管理员账号"
+        ],
+        "summary": "管理员信息",
+        "operationId": "get_api_admin_info",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "security": [
+          {
+            "adminBearer": []
+          }
+        ]
+      }
+    },
+    "/api/admin/change-password": {
+      "post": {
+        "tags": [
+          "管理员账号"
+        ],
+        "summary": "修改管理员密码",
+        "operationId": "post_api_admin_change_password",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "security": [
+          {
+            "adminBearer": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "oldPassword": {
+                    "type": "string"
+                  },
+                  "newPassword": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "oldPassword",
+                  "newPassword"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/list": {
+      "get": {
+        "tags": [
+          "管理员账号"
+        ],
+        "summary": "管理员列表",
+        "operationId": "get_api_admin_list",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "security": [
+          {
+            "adminBearer": []
+          }
+        ]
+      }
+    },
+    "/api/admin/add": {
+      "post": {
+        "tags": [
+          "管理员账号"
+        ],
+        "summary": "新增管理员",
+        "operationId": "post_api_admin_add",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "security": [
+          {
+            "adminBearer": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "phone": {
+                    "type": "string"
+                  },
+                  "role": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "username",
+                  "password"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/update/{id}": {
+      "put": {
+        "tags": [
+          "管理员账号"
+        ],
+        "summary": "更新管理员",
+        "operationId": "put_api_admin_update_id",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "security": [
+          {
+            "adminBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "phone": {
+                    "type": "string"
+                  },
+                  "role": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/reset-password/{id}": {
+      "post": {
+        "tags": [
+          "管理员账号"
+        ],
+        "summary": "重置管理员密码",
+        "operationId": "post_api_admin_reset_password_id",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "security": [
+          {
+            "adminBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "newPassword": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "newPassword"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/delete/{id}": {
+      "delete": {
+        "tags": [
+          "管理员账号"
+        ],
+        "summary": "删除管理员",
+        "operationId": "delete_api_admin_delete_id",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "security": [
+          {
+            "adminBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ]
+      }
+    },
+    "/api/admin/stats": {
+      "get": {
+        "tags": [
+          "管理员账号"
+        ],
+        "summary": "后台统计数据",
+        "operationId": "get_api_admin_stats",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "security": [
+          {
+            "adminBearer": []
+          }
+        ]
+      }
+    },
+    "/api/admin/users": {
+      "get": {
+        "tags": [
+          "后台业务管理"
+        ],
+        "summary": "用户列表",
+        "operationId": "get_api_admin_users",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        }
+      }
+    },
+    "/api/admin/favorites/stats": {
+      "get": {
+        "tags": [
+          "后台业务管理"
+        ],
+        "summary": "收藏统计",
+        "operationId": "get_api_admin_favorites_stats",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        }
+      }
+    },
+    "/api/admin/users/delete/{id}": {
+      "delete": {
+        "tags": [
+          "后台业务管理"
+        ],
+        "summary": "删除用户",
+        "operationId": "delete_api_admin_users_delete_id",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ]
+      }
+    },
+    "/api/admin/poi/add": {
+      "post": {
+        "tags": [
+          "后台业务管理"
+        ],
+        "summary": "新增 POI",
+        "operationId": "post_api_admin_poi_add",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string"
+                  },
+                  "latitude": {
+                    "type": "number"
+                  },
+                  "longitude": {
+                    "type": "number"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "comment": {
+                    "type": "string"
+                  },
+                  "rating": {
+                    "type": "number"
+                  },
+                  "open_time": {
+                    "type": "string"
+                  },
+                  "hot": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "name",
+                  "latitude",
+                  "longitude"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/poi/update/{id}": {
+      "put": {
+        "tags": [
+          "后台业务管理"
+        ],
+        "summary": "更新 POI",
+        "operationId": "put_api_admin_poi_update_id",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string"
+                  },
+                  "latitude": {
+                    "type": "number"
+                  },
+                  "longitude": {
+                    "type": "number"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "comment": {
+                    "type": "string"
+                  },
+                  "rating": {
+                    "type": "number"
+                  },
+                  "open_time": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/poi/delete/{id}": {
+      "delete": {
+        "tags": [
+          "后台业务管理"
+        ],
+        "summary": "删除 POI",
+        "operationId": "delete_api_admin_poi_delete_id",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ]
+      }
+    },
+    "/api/admin/charging/add": {
+      "post": {
+        "tags": [
+          "后台业务管理"
+        ],
+        "summary": "新增充电桩",
+        "operationId": "post_api_admin_charging_add",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "location": {
+                    "type": "string"
+                  },
+                  "latitude": {
+                    "type": "number"
+                  },
+                  "longitude": {
+                    "type": "number"
+                  },
+                  "status": {
+                    "type": "number"
+                  },
+                  "power": {
+                    "type": "number"
+                  },
+                  "total_slots": {
+                    "type": "number"
+                  },
+                  "available_slots": {
+                    "type": "number"
+                  },
+                  "price": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "name"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/charging/update/{id}": {
+      "put": {
+        "tags": [
+          "后台业务管理"
+        ],
+        "summary": "更新充电桩",
+        "operationId": "put_api_admin_charging_update_id",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "location": {
+                    "type": "string"
+                  },
+                  "latitude": {
+                    "type": "number"
+                  },
+                  "longitude": {
+                    "type": "number"
+                  },
+                  "status": {
+                    "type": "number"
+                  },
+                  "power": {
+                    "type": "number"
+                  },
+                  "total_slots": {
+                    "type": "number"
+                  },
+                  "available_slots": {
+                    "type": "number"
+                  },
+                  "price": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/charging/delete/{id}": {
+      "delete": {
+        "tags": [
+          "后台业务管理"
+        ],
+        "summary": "删除充电桩",
+        "operationId": "delete_api_admin_charging_delete_id",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ]
+      }
+    },
+    "/api/admin/bus/add": {
+      "post": {
+        "tags": [
+          "后台业务管理"
+        ],
+        "summary": "新增校巴线路",
+        "operationId": "post_api_admin_bus_add",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "number": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "start_station": {
+                    "type": "string"
+                  },
+                  "end_station": {
+                    "type": "string"
+                  },
+                  "operating_time": {
+                    "type": "number"
+                  },
+                  "interval_minutes": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "number"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/bus/update/{id}": {
+      "put": {
+        "tags": [
+          "后台业务管理"
+        ],
+        "summary": "更新校巴线路",
+        "operationId": "put_api_admin_bus_update_id",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "number": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "start_station": {
+                    "type": "string"
+                  },
+                  "end_station": {
+                    "type": "string"
+                  },
+                  "operating_time": {
+                    "type": "number"
+                  },
+                  "interval_minutes": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/bus/delete/{id}": {
+      "delete": {
+        "tags": [
+          "后台业务管理"
+        ],
+        "summary": "删除校巴线路",
+        "operationId": "delete_api_admin_bus_delete_id",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ]
+      }
+    },
+    "/api/admin/bus/stops": {
+      "get": {
+        "tags": [
+          "后台业务管理"
+        ],
+        "summary": "校巴站点列表",
+        "operationId": "get_api_admin_bus_stops",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        }
+      }
+    },
+    "/api/admin/bus/stops/add": {
+      "post": {
+        "tags": [
+          "后台业务管理"
+        ],
+        "summary": "新增校巴站点",
+        "operationId": "post_api_admin_bus_stops_add",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "latitude": {
+                    "type": "number"
+                  },
+                  "longitude": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "name",
+                  "latitude",
+                  "longitude"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/bus/stops/update/{id}": {
+      "put": {
+        "tags": [
+          "后台业务管理"
+        ],
+        "summary": "更新校巴站点",
+        "operationId": "put_api_admin_bus_stops_update_id",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "latitude": {
+                    "type": "number"
+                  },
+                  "longitude": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/bus/stops/delete/{id}": {
+      "delete": {
+        "tags": [
+          "后台业务管理"
+        ],
+        "summary": "删除校巴站点",
+        "operationId": "delete_api_admin_bus_stops_delete_id",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ]
+      }
+    },
+    "/api/admin/bus/line/{id}/stops": {
+      "post": {
+        "tags": [
+          "后台业务管理"
+        ],
+        "summary": "全量保存线路站点",
+        "description": "stops: [{ stop_id, sequence }]",
+        "operationId": "post_api_admin_bus_line_id_stops",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "stops": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                },
+                "required": [
+                  "stops"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "后台业务管理"
+        ],
+        "summary": "线路站点列表",
+        "operationId": "get_api_admin_bus_line_id_stops",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ]
+      }
+    },
+    "/api/admin/flower/upload": {
+      "post": {
+        "tags": [
+          "后台业务管理"
+        ],
+        "summary": "上传赏花图片",
+        "description": "multipart/form-data",
+        "operationId": "post_api_admin_flower_upload",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "image": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                },
+                "required": [
+                  "image"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/flower/image/{filename}": {
+      "delete": {
+        "tags": [
+          "后台业务管理"
+        ],
+        "summary": "删除赏花图片",
+        "operationId": "delete_api_admin_flower_image_filename",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "filename",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/admin/flower/list": {
+      "get": {
+        "tags": [
+          "后台业务管理"
+        ],
+        "summary": "管理端赏花点列表",
+        "operationId": "get_api_admin_flower_list",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "default": 10
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "keyword",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/admin/flower/add": {
+      "post": {
+        "tags": [
+          "后台业务管理"
+        ],
+        "summary": "新增赏花点",
+        "operationId": "post_api_admin_flower_add",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string"
+                  },
+                  "latitude": {
+                    "type": "number"
+                  },
+                  "longitude": {
+                    "type": "number"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "best_time": {
+                    "type": "string"
+                  },
+                  "features": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  },
+                  "rating": {
+                    "type": "number"
+                  },
+                  "status": {
+                    "type": "number"
+                  },
+                  "images": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  },
+                  "has_video": {
+                    "type": "boolean"
+                  },
+                  "has_360": {
+                    "type": "boolean"
+                  },
+                  "has_live_stream": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "name"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/flower/update/{id}": {
+      "put": {
+        "tags": [
+          "后台业务管理"
+        ],
+        "summary": "更新赏花点",
+        "operationId": "put_api_admin_flower_update_id",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string"
+                  },
+                  "latitude": {
+                    "type": "number"
+                  },
+                  "longitude": {
+                    "type": "number"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "best_time": {
+                    "type": "string"
+                  },
+                  "features": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  },
+                  "rating": {
+                    "type": "number"
+                  },
+                  "status": {
+                    "type": "number"
+                  },
+                  "images": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  },
+                  "has_video": {
+                    "type": "boolean"
+                  },
+                  "has_360": {
+                    "type": "boolean"
+                  },
+                  "has_live_stream": {
+                    "type": "boolean"
+                  },
+                  "checkin_count": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/flower/delete/{id}": {
+      "delete": {
+        "tags": [
+          "后台业务管理"
+        ],
+        "summary": "删除赏花点",
+        "operationId": "delete_api_admin_flower_delete_id",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ]
+      }
+    },
+    "/api/admin/news/list": {
+      "get": {
+        "tags": [
+          "后台业务管理"
+        ],
+        "summary": "管理端资讯列表",
+        "operationId": "get_api_admin_news_list",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "default": 10
+            }
+          },
+          {
+            "name": "keyword",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/admin/news/add": {
+      "post": {
+        "tags": [
+          "后台业务管理"
+        ],
+        "summary": "新增资讯",
+        "operationId": "post_api_admin_news_add",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "content": {
+                    "type": "string"
+                  },
+                  "image": {
+                    "type": "string"
+                  },
+                  "author": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "title",
+                  "content"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/news/update/{id}": {
+      "put": {
+        "tags": [
+          "后台业务管理"
+        ],
+        "summary": "更新资讯",
+        "operationId": "put_api_admin_news_update_id",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "content": {
+                    "type": "string"
+                  },
+                  "image": {
+                    "type": "string"
+                  },
+                  "author": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/news/delete/{id}": {
+      "delete": {
+        "tags": [
+          "后台业务管理"
+        ],
+        "summary": "删除资讯",
+        "operationId": "delete_api_admin_news_delete_id",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ]
+      }
+    },
+    "/api/admin/flower/routes/list": {
+      "get": {
+        "tags": [
+          "后台业务管理"
+        ],
+        "summary": "管理端赏花路线列表",
+        "operationId": "get_api_admin_flower_routes_list",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "default": 10
+            }
+          },
+          {
+            "name": "keyword",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/admin/flower/routes/add": {
+      "post": {
+        "tags": [
+          "后台业务管理"
+        ],
+        "summary": "新增赏花路线",
+        "operationId": "post_api_admin_flower_routes_add",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "duration": {
+                    "type": "number"
+                  },
+                  "distance": {
+                    "type": "number"
+                  },
+                  "difficulty": {
+                    "type": "string"
+                  },
+                  "spots": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "best_time": {
+                    "type": "string"
+                  },
+                  "tags": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  },
+                  "highlights": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  },
+                  "tips": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                },
+                "required": [
+                  "name"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/flower/routes/update/{id}": {
+      "put": {
+        "tags": [
+          "后台业务管理"
+        ],
+        "summary": "更新赏花路线",
+        "operationId": "put_api_admin_flower_routes_update_id",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "duration": {
+                    "type": "number"
+                  },
+                  "distance": {
+                    "type": "number"
+                  },
+                  "difficulty": {
+                    "type": "string"
+                  },
+                  "spots": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "best_time": {
+                    "type": "string"
+                  },
+                  "tags": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  },
+                  "highlights": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  },
+                  "tips": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/flower/routes/delete/{id}": {
+      "delete": {
+        "tags": [
+          "后台业务管理"
+        ],
+        "summary": "删除赏花路线",
+        "operationId": "delete_api_admin_flower_routes_delete_id",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ]
+      }
+    },
+    "/api/admin/flower/spots/simple": {
+      "get": {
+        "tags": [
+          "后台业务管理"
+        ],
+        "summary": "赏花点简表",
+        "operationId": "get_api_admin_flower_spots_simple",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        }
+      }
+    },
+    "/api/admin/flower/checkins": {
+      "get": {
+        "tags": [
+          "后台业务管理"
+        ],
+        "summary": "打卡记录列表",
+        "operationId": "get_api_admin_flower_checkins",
+        "responses": {
+          "200": {
+            "description": "成功",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "请求参数或业务状态错误"
+          },
+          "401": {
+            "description": "未认证或 token 无效"
+          },
+          "403": {
+            "description": "权限不足"
+          },
+          "404": {
+            "description": "资源不存在"
+          },
+          "500": {
+            "description": "服务器错误"
+          }
+        },
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "default": 20
+            }
+          },
+          {
+            "name": "spotId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "userToken": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "Authorization",
+        "description": "用户 JWT，直接传 token"
+      },
+      "adminBearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "管理员 JWT"
+      }
+    },
+    "schemas": {
+      "ApiResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "example": 0
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "nullable": true
+          }
+        },
+        "required": [
+          "code"
+        ]
+      }
+    }
+  }
+}

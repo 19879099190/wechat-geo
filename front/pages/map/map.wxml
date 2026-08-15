@@ -1,0 +1,145 @@
+<view class="container">
+  <!-- 地图 -->
+  <map 
+    id="map"
+    class="map"
+    latitude="{{latitude}}"
+    longitude="{{longitude}}"
+    scale="{{scale}}"
+    markers="{{markers}}"
+    polyline="{{polyline}}"
+    show-location
+    bindmarkertap="onMarkerTap"
+  >
+    <!-- 地图控制按钮 -->
+    <cover-view class="map-controls">
+      <cover-view class="control-btn" bindtap="moveToLocation">
+        <cover-view class="control-icon">📍</cover-view>
+      </cover-view>
+      <cover-view class="control-btn primary" bindtap="showRoutePlanner">
+        <cover-view class="control-icon">🧭</cover-view>
+      </cover-view>
+    </cover-view>
+  </map>
+
+  <!-- 路线规划面板 -->
+  <view class="route-panel {{showRoutePanel ? 'show' : ''}}">
+    <view class="panel-header">
+      <view class="panel-title">路线规划</view>
+      <view class="panel-close" bindtap="hideRoutePanel">✕</view>
+    </view>
+
+    <view class="location-section">
+      <view class="location-item">
+        <view class="location-icon start-icon">起</view>
+        <view class="location-input" bindtap="chooseStartLocation">
+          <text class="{{startLocation ? 'location-text' : 'location-placeholder'}}">
+            {{startLocation || '请选择起点'}}
+          </text>
+        </view>
+        <view class="location-btn" bindtap="useCurrentLocation">
+          <text>📍</text>
+        </view>
+      </view>
+
+      <view class="swap-btn" bindtap="swapLocations">
+        <text class="swap-icon">⇅</text>
+      </view>
+
+      <view class="location-item">
+        <view class="location-icon end-icon">终</view>
+        <view class="location-input" bindtap="chooseEndLocation">
+          <text class="{{endLocation ? 'location-text' : 'location-placeholder'}}">
+            {{endLocation || '请选择终点'}}
+          </text>
+        </view>
+      </view>
+    </view>
+
+    <view class="mode-section">
+      <view class="mode-title">出行方式</view>
+      <view class="mode-list">
+        <view 
+          wx:for="{{modes}}" 
+          wx:key="value"
+          class="mode-item {{travelMode === item.value ? 'active' : ''}}"
+          data-mode="{{item.value}}"
+          bindtap="onModeChange"
+        >
+          <text class="mode-label">{{item.label}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="action-section">
+      <button class="plan-btn" bindtap="planRoute">开始规划</button>
+    </view>
+  </view>
+
+  <!-- 遮罩层 -->
+  <view class="mask {{showRoutePanel ? 'show' : ''}}" bindtap="hideRoutePanel"></view>
+
+  <!-- POI搜索面板 -->
+  <view class="poi-search-panel {{showPoiSearch ? 'show' : ''}}">
+    <view class="search-header">
+      <view class="search-back" bindtap="closePoiSearch">←</view>
+      <view class="search-input-wrapper">
+        <input 
+          class="search-input"
+          placeholder="搜索校园地点"
+          value="{{searchKeyword}}"
+          bindinput="onSearchInput"
+          focus="{{showPoiSearch}}"
+        />
+      </view>
+    </view>
+
+    <view class="search-content">
+      <!-- 使用微信地点选择器 -->
+      <view class="search-item special" bindtap="useWxChooseLocation">
+        <view class="search-icon">🗺️</view>
+        <view class="search-info">
+          <view class="search-name">使用地图选点</view>
+          <view class="search-desc">打开微信地图选择任意位置</view>
+        </view>
+      </view>
+
+      <!-- 使用当前位置 -->
+      <view class="search-item special" bindtap="useCurrentLocation" wx:if="{{searchType === 'start'}}">
+      <view class="search-icon">📍</view>
+      <view class="search-info">
+          <view class="search-name">当前位置</view>
+          <view class="search-desc">使用我的当前位置</view>
+        </view>
+      </view>
+
+      <!-- POI列表 -->
+      <view class="poi-list">
+        <view class="list-title" wx:if="{{searchResults.length > 0}}">
+          {{searchKeyword ? '搜索结果' : '校园地点'}}
+    </view>
+        <scroll-view scroll-y class="poi-scroll">
+      <view 
+        wx:for="{{searchResults}}" 
+        wx:key="id"
+        class="search-item"
+        data-poi="{{item}}"
+            bindtap="selectPoi"
+      >
+        <view class="search-icon">📍</view>
+        <view class="search-info">
+          <view class="search-name">{{item.name}}</view>
+              <view class="search-desc" wx:if="{{item.description}}">{{item.description}}</view>
+        </view>
+      </view>
+        </scroll-view>
+
+        <!-- 空状态 -->
+        <view class="empty-state" wx:if="{{searchKeyword && searchResults.length === 0}}">
+        <view class="empty-icon">🔍</view>
+        <view class="empty-text">未找到相关地点</view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

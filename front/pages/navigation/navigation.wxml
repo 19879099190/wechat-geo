@@ -1,0 +1,56 @@
+<view class="container">
+  <view class="header">
+    <text class="title">路径规划</text>
+  </view>
+
+  <view class="location-panel">
+    <view class="location-item">
+      <view class="location-icon start-icon">起</view>
+      <input 
+        class="location-input" 
+        placeholder="请选择起点" 
+        value="{{startLocation}}"
+        disabled
+        bindtap="chooseStartLocation"
+      />
+      <view class="location-btn" bindtap="getCurrentLocation">
+        <text class="iconfont">📍</text>
+      </view>
+    </view>
+
+    <view class="swap-btn" bindtap="swapLocations">
+      <text class="swap-icon">⇅</text>
+    </view>
+
+    <view class="location-item">
+      <view class="location-icon end-icon">终</view>
+      <input 
+        class="location-input" 
+        placeholder="请选择终点" 
+        value="{{endLocation}}"
+        disabled
+        bindtap="chooseEndLocation"
+      />
+    </view>
+  </view>
+
+  <view class="mode-panel">
+    <text class="mode-title">出行方式</text>
+    <view class="mode-list">
+      <block wx:for="{{modes}}" wx:key="value">
+        <view 
+          class="mode-item {{travelMode === item.value ? 'active' : ''}}"
+          data-mode="{{item.value}}"
+          bindtap="onModeChange"
+        >
+          <text class="mode-label">{{item.label}}</text>
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <view class="action-panel">
+    <button class="plan-btn" bindtap="planRoute">开始规划</button>
+  </view>
+</view>
+

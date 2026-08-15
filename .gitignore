@@ -1,0 +1,35 @@
+# Backend
+back/node_modules/
+back/npm-debug.log*
+back/package-lock.json
+back/.env
+back/.env.local
+back/.env.*.local
+images
+
+# Frontend
+front/project.private.config.json
+
+# 日志
+logs/
+*.log
+
+# 操作系统
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 临时文件
+tmp/
+temp/
+*.tmp
+
+# 数据库备份
+*.sql
+*.dump

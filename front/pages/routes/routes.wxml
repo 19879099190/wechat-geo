@@ -1,0 +1,33 @@
+<view class="route-page">
+  <view class="page-head">
+    <view class="title">常用路线</view>
+    <view class="subtitle">保存常走的路线，下次一键导航</view>
+  </view>
+
+  <view wx:if="{{loading}}" class="state">加载中...</view>
+  <view wx:elif="{{routes.length === 0}}" class="empty-card">
+    <view class="empty-icon">↗</view>
+    <view class="empty-title">还没有常用路线</view>
+    <view class="empty-desc">完成一次路线规划后可保存为常用路线</view>
+  </view>
+
+  <view wx:else class="route-list">
+    <view wx:for="{{routes}}" wx:key="id" class="route-card">
+      <view class="route-name">{{item.name}}</view>
+      <view class="point-row"><text class="dot start"></text><text>{{item.from_name}}</text></view>
+      <view class="line"></view>
+      <view class="point-row"><text class="dot end"></text><text>{{item.to_name}}</text></view>
+      <view class="meta">
+        <text>{{modeText[item.mode] || item.mode}}</text>
+        <text wx:if="{{item.distance}}">{{item.distance}} 米</text>
+        <text wx:if="{{item.duration}}">约 {{item.duration}} 分钟</text>
+      </view>
+      <view class="card-actions">
+        <button class="small-btn danger" data-id="{{item.id}}" bindtap="deleteRoute">删除</button>
+        <button class="small-btn primary" data-route="{{item}}" bindtap="useRoute">去这里</button>
+      </view>
+    </view>
+  </view>
+
+  <button class="add-btn" bindtap="addRoute">规划新路线</button>
+</view>

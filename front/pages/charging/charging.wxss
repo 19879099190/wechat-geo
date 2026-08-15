@@ -1,0 +1,120 @@
+/* pages/charging/charging.wxss */
+.container {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  padding-bottom: 20rpx;
+}
+
+.suggestion-entry { display: flex; align-items: center; justify-content: space-between; margin: 20rpx; padding: 24rpx 28rpx; color: #fff; background: linear-gradient(135deg, #2e7d32, #66bb6a); border-radius: 18rpx; }
+.entry-title { font-size: 29rpx; font-weight: 600; }.entry-desc { margin-top: 7rpx; opacity: .82; font-size: 23rpx; }.entry-arrow { font-size: 48rpx; }
+
+.filter-bar {
+  background-color: #ffffff;
+  padding: 20rpx 30rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+}
+
+.filter-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16rpx 24rpx;
+  background-color: #f5f5f5;
+  border-radius: 8rpx;
+  font-size: 28rpx;
+  color: #333333;
+}
+
+.arrow {
+  font-size: 20rpx;
+  color: #999999;
+}
+
+.station-list {
+  padding: 0 20rpx;
+}
+
+.loading, .empty {
+  text-align: center;
+  padding: 100rpx 0;
+  color: #999999;
+  font-size: 28rpx;
+}
+
+.station-item {
+  background-color: #ffffff;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+}
+
+.station-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16rpx;
+  padding-bottom: 16rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.station-name {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333333;
+}
+
+.station-status {
+  font-size: 24rpx;
+  font-weight: 500;
+  padding: 4rpx 12rpx;
+  border-radius: 4rpx;
+  background-color: #f0f0f0;
+}
+
+.station-info {
+  margin-bottom: 16rpx;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8rpx;
+  font-size: 26rpx;
+}
+
+.info-label {
+  color: #666666;
+  min-width: 140rpx;
+}
+
+.info-value {
+  color: #333333;
+  flex: 1;
+}
+
+.station-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16rpx;
+  margin-top: 16rpx;
+}
+
+.action-btn {
+  padding: 12rpx 32rpx;
+  font-size: 26rpx;
+  border-radius: 8rpx;
+  background-color: #f5f5f5;
+  color: #333333;
+}
+
+.action-btn.primary {
+  background-color: #2E7D32;
+  color: #ffffff;
+}
+
+.action-btn[disabled] {
+  background-color: #e0e0e0;
+  color: #999999;
+}

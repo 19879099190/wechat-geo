@@ -1,0 +1,177 @@
+<!--pages/bus/bus.wxml-->
+<view class="container">
+  <!-- 校巴线路列表 -->
+  <view class="bus-list">
+    <view wx:if="{{loading}}" class="loading">
+      <text>加载中...</text>
+    </view>
+
+    <view wx:elif="{{busList.length === 0}}" class="empty">
+      <text>暂无校巴线路数据</text>
+    </view>
+
+    <view wx:else>
+      <view class="bus-item" wx:for="{{busList}}" wx:key="id">
+        <!-- 线路头部 -->
+        <view class="bus-header" bindtap="viewLineDetail" data-line="{{item}}">
+          <view class="bus-number">{{item.number}}</view>
+          <view class="bus-name">{{item.name}}</view>
+        </view>
+
+        <!-- 线路信息 -->
+        <view class="bus-route">
+          <text class="route-text">{{item.start_station}}</text>
+          <text class="arrow">→</text>
+          <text class="route-text">{{item.end_station}}</text>
+        </view>
+
+        <!-- 运营信息 -->
+        <view class="bus-info">
+          <view class="info-item">
+            <text class="info-icon">🕐</text>
+            <text class="info-text">{{item.operating_time}}</text>
+          </view>
+          <view class="info-item">
+            <text class="info-icon">⏱️</text>
+            <text class="info-text">{{item.interval_minutes}}分钟/班</text>
+          </view>
+        </view>
+
+        <!-- 操作按钮 -->
+        <view class="bus-actions">
+          <button class="action-btn" size="mini" bindtap="viewRealtime" data-id="{{item.id}}">
+            实时位置
+          </button>
+          <button class="action-btn primary" size="mini" bindtap="viewLineDetail" data-line="{{item}}">
+            查看详情
+          </button>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 线路详情弹窗 -->
+  <view class="modal" wx:if="{{showDetail}}" catchtap="closeDetail">
+    <view class="modal-content" catchtap="preventModalClose">
+      <view class="modal-header">
+        <view class="modal-title">
+          <text class="line-number">{{selectedLine.number}}</text>
+          <text class="line-name">{{selectedLine.name}}</text>
+        </view>
+        <view class="close-btn" catchtap="closeDetail">✕</view>
+      </view>
+
+      <scroll-view class="modal-body" scroll-y="{{true}}" enhanced="{{true}}" show-scrollbar="{{true}}">
+        <!-- 运营信息 -->
+        <view class="detail-section">
+          <view class="section-title">运营信息</view>
+          <view class="detail-item">
+            <text class="detail-label">运营时间：</text>
+            <text class="detail-value">{{selectedLine.operating_time}}</text>
+          </view>
+          <view class="detail-item">
+            <text class="detail-label">发车间隔：</text>
+            <text class="detail-value">{{selectedLine.interval_minutes}}分钟</text>
+          </view>
+        </view>
+
+        <!-- 站点列表 -->
+        <view class="detail-section">
+          <view class="section-title">途经站点</view>
+          <view class="station-list">
+            <view class="station-item" wx:for="{{selectedLine.stations}}" wx:key="id" wx:for-item="station">
+              <view class="station-dot">
+                <view class="dot"></view>
+                <view class="line" wx:if="{{index < selectedLine.stations.length - 1}}"></view>
+              </view>
+              <view class="station-info">
+                <view class="station-name">{{station.name}}</view>
+                <view class="station-time" wx:if="{{station.arrival_time}}">
+                  预计 {{station.arrival_time}}
+                </view>
+              </view>
+              <view class="station-actions">
+                <view class="icon-btn" catchtap="viewStopMap" data-stop="{{station}}">
+                  📍
+                </view>
+                <view class="icon-btn" catchtap="viewArrivalTime" data-lineid="{{selectedLine.id}}" data-stopid="{{station.id}}">
+                  🕐
+                </view>
+                <view class="icon-btn" catchtap="subscribeArrival" data-lineid="{{selectedLine.id}}" data-stopid="{{station.id}}">
+                  🔔
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+
+        <!-- 操作按钮 -->
+        <view class="modal-footer">
+          <button class="modal-btn" bindtap="viewRouteMap" data-line="{{selectedLine}}">
+            查看路线图
+          </button>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+
+  <!-- 实时位置弹窗 -->
+  <view class="modal" wx:if="{{showRealtime}}" catchtap="closeDetail">
+    <view class="modal-content small" catchtap="preventModalClose">
+      <view class="modal-header">
+        <view class="modal-title">实时位置</view>
+        <view class="close-btn" catchtap="closeDetail">✕</view>
+      </view>
+
+      <scroll-view class="modal-body" scroll-y="{{true}}" enhanced="{{true}}" show-scrollbar="{{true}}">
+        <view wx:if="{{realtimeBuses.length === 0}}" class="empty-tip">
+          <text>暂无车辆在线</text>
+        </view>
+
+        <view wx:else class="realtime-list">
+          <view class="realtime-item" wx:for="{{realtimeBuses}}" wx:key="id">
+            <view class="bus-badge">{{item.busNumber}}号车</view>
+            <view class="realtime-info">
+              <view class="info-row">
+                <text class="label">当前位置：</text>
+                <text class="value">{{item.currentLocation}}</text>
+              </view>
+              <view class="info-row">
+                <text class="label">下一站：</text>
+                <text class="value">{{item.nextStation}}</text>
+              </view>
+              <view class="info-row">
+                <text class="label">距离：</text>
+                <text class="value highlight">{{item.distance}}</text>
+              </view>
+              <view class="info-row">
+                <text class="label">预计到达：</text>
+                <text class="value highlight">{{item.estimatedArrival}}分钟</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+
+  <!-- 路线地图弹窗 -->
+  <view wx:if="{{showMap}}" class="map-modal">
+    <view class="map-header">
+      <text class="map-title">{{mapLineName}}</text>
+      <view class="map-close" bindtap="closeMap">✕</view>
+    </view>
+    <map
+      id="busRouteMap"
+      class="route-map"
+      latitude="{{mapCenter.latitude}}"
+      longitude="{{mapCenter.longitude}}"
+      scale="15"
+      markers="{{mapMarkers}}"
+      polyline="{{mapPolyline}}"
+      show-location="{{false}}"
+      enable-zoom="{{true}}"
+      enable-scroll="{{true}}"
+    ></map>
+  </view>
+</view>

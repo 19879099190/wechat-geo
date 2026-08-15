@@ -1,0 +1,175 @@
+<view class="routes-container">
+  <!-- 页面标题 -->
+  <view class="page-header">
+    <text class="page-title">赏花路线推荐</text>
+    <text class="page-subtitle">精选校园最美赏花路线</text>
+  </view>
+
+  <!-- 加载状态 -->
+  <view wx:if="{{loading}}" class="loading-container">
+    <view class="loading-spinner"></view>
+    <text class="loading-text">加载路线中...</text>
+  </view>
+
+  <!-- 空状态 -->
+  <view wx:elif="{{routes.length === 0}}" class="empty-container">
+    <text class="empty-icon">🗺️</text>
+    <text class="empty-text">暂无推荐路线</text>
+    <text class="empty-hint">管理员正在规划精彩路线，敬请期待</text>
+  </view>
+
+  <!-- 路线列表 -->
+  <view wx:else class="routes-list">
+    <view wx:for="{{routes}}" wx:key="id" class="route-card">
+      <!-- 路线信息 -->
+      <view class="route-info">
+        <view class="route-header">
+          <view class="route-title-group">
+            <text class="route-name">{{item.name}}</text>
+          </view>
+          <view class="difficulty-badge difficulty-{{item.difficulty === '简单' ? 'easy' : item.difficulty === '中等' ? 'medium' : 'hard'}}">
+            <text>{{item.difficulty || '简单'}}</text>
+          </view>
+        </view>
+
+        <!-- 路线元数据 -->
+        <view class="route-meta">
+          <view class="meta-item">
+            <text class="meta-icon">⏱️</text>
+            <text class="meta-text">{{item.duration || '-'}}</text>
+          </view>
+          <view class="meta-item">
+            <text class="meta-icon">📏</text>
+            <text class="meta-text">{{item.distanceText}}</text>
+          </view>
+          <view class="meta-item">
+            <text class="meta-icon">📍</text>
+            <text class="meta-text">{{item.spots.length}}个景点</text>
+          </view>
+        </view>
+
+        <!-- 路线描述 -->
+        <view wx:if="{{item.description}}" class="route-description">{{item.description}}</view>
+
+        <!-- 特色标签 -->
+        <view wx:if="{{item.highlights.length > 0}}" class="route-features">
+          <text wx:for="{{item.highlights}}" wx:key="index" wx:for-item="tag" class="feature-tag">{{tag}}</text>
+        </view>
+        <view wx:elif="{{item.tags.length > 0}}" class="route-features">
+          <text wx:for="{{item.tags}}" wx:key="index" wx:for-item="tag" class="feature-tag">{{tag}}</text>
+        </view>
+
+        <!-- 景点列表 -->
+        <view wx:if="{{item.spots.length > 0}}" class="spots-preview">
+          <text class="spots-title">途经景点（{{item.spots.length}}个）：</text>
+          <view class="spots-flow">
+            <block wx:for="{{item.spots}}" wx:key="spot_id" wx:for-item="spot">
+              <text class="spot-name">{{spot.name || '未知'}}</text>
+              <text wx:if="{{index < item.spots.length - 1}}" class="spot-arrow">→</text>
+            </block>
+          </view>
+        </view>
+
+        <!-- 操作按钮 -->
+        <view class="route-actions">
+          <button class="action-btn detail-btn" bindtap="viewRouteDetail" data-route="{{item}}">查看详情</button>
+          <button class="action-btn map-btn" bindtap="viewOnMap" data-route="{{item}}">查看地图</button>
+          <button class="action-btn nav-btn" bindtap="startNavigation" data-route="{{item}}">开始导航</button>
+        </view>
+
+        <!-- 路线底部 -->
+        <view class="route-footer">
+          <text class="best-time">最佳时间：{{item.best_time}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 路线详情弹窗 -->
+  <view wx:if="{{selectedRoute}}" class="detail-modal">
+    <view class="modal-mask" bindtap="closeDetail"></view>
+    <view class="modal-content">
+      <view class="modal-header">
+        <text class="modal-title">{{selectedRoute.name}}</text>
+        <icon class="close-icon" type="clear" size="24" bindtap="closeDetail"></icon>
+      </view>
+
+      <scroll-view class="modal-body" scroll-y>
+        <!-- 路线信息 -->
+        <view class="detail-section">
+          <text class="section-title">路线信息</text>
+          <view class="info-grid">
+            <view class="info-item">
+              <text class="info-label">游览时长</text>
+              <text class="info-value">{{selectedRoute.duration || '-'}}</text>
+            </view>
+            <view class="info-item">
+              <text class="info-label">路线距离</text>
+              <text class="info-value">{{selectedRoute.distanceText}}</text>
+            </view>
+            <view class="info-item">
+              <text class="info-label">难度等级</text>
+              <text class="info-value">{{selectedRoute.difficulty || '简单'}}</text>
+            </view>
+            <view class="info-item">
+              <text class="info-label">最佳时间</text>
+              <text class="info-value">{{selectedRoute.best_time}}</text>
+            </view>
+          </view>
+        </view>
+
+        <!-- 景点详情时间轴 -->
+        <view wx:if="{{selectedRoute.spots.length > 0}}" class="detail-section">
+          <text class="section-title">景点安排</text>
+          <view class="spots-timeline">
+            <view wx:for="{{selectedRoute.spots}}" wx:key="spot_id" wx:for-item="spot" class="timeline-item">
+              <view class="timeline-dot">{{spot.order || index + 1}}</view>
+              <view class="timeline-content">
+                <text class="spot-name-large">{{spot.name || '未知景点'}}</text>
+                <text wx:if="{{spot.duration}}" class="spot-time">建议游览：{{spot.duration}}</text>
+                <text wx:if="{{spot.type}}" class="spot-type">类型：{{spot.type}}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+
+        <!-- 游玩提示 -->
+        <view wx:if="{{selectedRoute.tips.length > 0}}" class="detail-section">
+          <text class="section-title">游玩提示</text>
+          <view class="tips-list">
+            <view wx:for="{{selectedRoute.tips}}" wx:key="index" wx:for-item="tip" class="tip-item">
+              <text class="tip-bullet">•</text>
+              <text class="tip-text">{{tip}}</text>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
+
+      <view class="modal-footer">
+        <button class="modal-btn secondary" bindtap="viewOnMap" data-route="{{selectedRoute}}">查看地图</button>
+        <button class="modal-btn primary" bindtap="startNavigation" data-route="{{selectedRoute}}">开始导航</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 地图弹窗 -->
+  <view wx:if="{{showMap}}" class="map-modal">
+    <view class="map-header">
+      <text class="map-title">{{mapRouteName}}</text>
+      <text wx:if="{{mapPlanning}}" class="map-planning">路线规划中...</text>
+      <view class="map-close" bindtap="closeMap">✕</view>
+    </view>
+    <map
+      id="routeMap"
+      class="route-map"
+      latitude="{{mapCenter.latitude}}"
+      longitude="{{mapCenter.longitude}}"
+      scale="15"
+      markers="{{mapMarkers}}"
+      polyline="{{mapPolyline}}"
+      show-location="{{false}}"
+      enable-zoom="{{true}}"
+      enable-scroll="{{true}}"
+    ></map>
+  </view>
+</view>

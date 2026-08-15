@@ -1,0 +1,11 @@
+.parking-page { min-height: 100vh; background: #f3f6f3; padding-bottom: 40rpx; }
+.hero { padding: 58rpx 34rpx 44rpx; color: #fff; background: linear-gradient(135deg, #1b5e20, #43a047); }
+.hero-title { font-size: 48rpx; font-weight: 700; }.hero-subtitle { margin-top: 12rpx; opacity: .84; font-size: 26rpx; }
+.filters { white-space: nowrap; background: #fff; }.filter-row { display: inline-flex; gap: 16rpx; padding: 22rpx 28rpx; }
+.chip { padding: 14rpx 28rpx; color: #617067; background: #f0f3f0; border-radius: 32rpx; font-size: 26rpx; }.chip.active { color: #fff; background: #2e7d32; }
+.state { padding: 120rpx 0; color: #869188; text-align: center; }
+.lot-list { padding: 26rpx; }.lot-card { margin-bottom: 22rpx; padding: 28rpx; background: #fff; border-radius: 24rpx; box-shadow: 0 6rpx 22rpx rgba(25, 66, 34, .06); }
+.lot-head, .lot-foot { display: flex; align-items: center; justify-content: space-between; }.lot-name { color: #203b27; font-size: 33rpx; font-weight: 650; }.lot-type { display: inline-block; margin-top: 10rpx; padding: 5rpx 14rpx; color: #2e7d32; background: #eaf5eb; border-radius: 16rpx; font-size: 22rpx; }
+.availability { display: flex; flex-direction: column; align-items: flex-end; color: #2e7d32; font-size: 22rpx; }.availability.full { color: #c94c4c; }.available-number { font-size: 42rpx; font-weight: 700; line-height: 1; }
+.address { margin-top: 24rpx; color: #6c786f; font-size: 26rpx; }.progress { height: 10rpx; margin: 24rpx 0 20rpx; overflow: hidden; background: #e9eeea; border-radius: 6rpx; }.progress-value { height: 100%; background: #43a047; border-radius: 6rpx; }
+.lot-foot { color: #89928b; font-size: 24rpx; }.nav-btn { margin: 0; padding: 0 32rpx; color: #fff; background: #2e7d32; border-radius: 32rpx; font-size: 25rpx; line-height: 64rpx; }

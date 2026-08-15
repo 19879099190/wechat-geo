@@ -1,0 +1,55 @@
+<!--pages/login/login.wxml-->
+<view class="container">
+  <!-- 顶部装饰 -->
+  <view class="header">
+    <view class="logo">🎓</view>
+    <view class="title">华农掌中行</view>
+    <view class="subtitle">智慧校园 · 便捷出行</view>
+  </view>
+
+  <!-- 登录/注册表单 -->
+  <view class="form-container">
+    <view class="form-title">{{isLogin ? '登录' : '注册'}}</view>
+
+    <!-- 手机号输入 -->
+    <view class="input-group">
+      <view class="input-label">手机号</view>
+      <input 
+        class="input-field"
+        type="number"
+        maxlength="11"
+        placeholder="请输入手机号"
+        value="{{phone}}"
+        bindinput="onPhoneInput"
+      />
+    </view>
+
+    <!-- 密码输入 -->
+    <view class="input-group">
+      <view class="input-label">密码</view>
+      <input 
+        class="input-field"
+        type="password"
+        placeholder="{{isLogin ? '请输入密码' : '请设置密码（至少6位）'}}"
+        value="{{password}}"
+        bindinput="onPasswordInput"
+      />
+    </view>
+
+    <!-- 提交按钮 -->
+    <button class="submit-btn" bindtap="handleSubmit">
+      {{isLogin ? '登录' : '注册'}}
+    </button>
+
+    <!-- 切换模式 -->
+    <view class="toggle-mode" bindtap="toggleMode">
+      <text>{{isLogin ? '还没有账号？去注册' : '已有账号？去登录'}}</text>
+    </view>
+  </view>
+
+  <!-- 底部提示 -->
+  <view class="footer">
+    <text class="footer-text">登录即表示同意用户协议和隐私政策</text>
+  </view>
+</view>
+

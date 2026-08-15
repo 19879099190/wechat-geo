@@ -1,0 +1,31 @@
+<view class="suggestion-page">
+  <view class="intro">
+    <view class="intro-icon">⚡</view>
+    <view class="intro-title">建议新的充电点</view>
+    <view class="intro-desc">告诉我们哪里需要充电设施，为校园规划提供参考。</view>
+  </view>
+
+  <view class="form-card">
+    <view class="field-label">建议位置</view>
+    <view class="location-picker" bindtap="chooseLocation">
+      <text class="pin">⌖</text>
+      <text class="location-text {{locationName ? '' : 'placeholder'}}">{{locationName || '在地图上选择位置'}}</text>
+      <text class="arrow">›</text>
+    </view>
+
+    <view class="field-label reason-label">建议原因</view>
+    <textarea class="reason-input" value="{{reason}}" bindinput="onReasonInput" maxlength="500" placeholder="例如：该区域电动车较多，现有充电点距离较远…" />
+    <view class="counter">{{reason.length}} / 500</view>
+
+    <button class="submit-btn" bindtap="submit" loading="{{submitting}}">提交建议</button>
+  </view>
+
+  <view wx:if="{{suggestions.length}}" class="history">
+    <view class="history-title">我的建议</view>
+    <view wx:for="{{suggestions}}" wx:key="id" class="history-item">
+      <view class="history-head"><text>{{item.location_name}}</text><text class="status status-{{item.status}}">{{statusText[item.status]}}</text></view>
+      <view class="history-reason">{{item.reason}}</view>
+      <view class="history-time">{{item.created_at}}</view>
+    </view>
+  </view>
+</view>

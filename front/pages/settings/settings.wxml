@@ -1,0 +1,105 @@
+<!--pages/settings/settings.wxml-->
+<view class="container">
+  <!-- 基本设置 -->
+  <view class="section">
+    <view class="section-title">基本设置</view>
+    <view class="setting-list">
+      <view class="setting-item">
+        <view class="setting-left">
+          <text class="setting-icon">🔔</text>
+          <text class="setting-name">消息通知</text>
+        </view>
+        <switch checked="{{notificationEnabled}}" bindchange="onNotificationChange" color="#2E7D32"/>
+      </view>
+      
+      <view class="setting-item">
+        <view class="setting-left">
+          <text class="setting-icon">📍</text>
+          <text class="setting-name">自动定位</text>
+        </view>
+        <switch checked="{{autoLocationEnabled}}" bindchange="onAutoLocationChange" color="#2E7D32"/>
+      </view>
+      
+      <view class="setting-item" bindtap="selectLanguage">
+        <view class="setting-left">
+          <text class="setting-icon">🌐</text>
+          <text class="setting-name">语言</text>
+        </view>
+        <view class="setting-right">
+          <text class="setting-value">{{language}}</text>
+          <text class="setting-arrow">›</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 地图设置 -->
+  <view class="section">
+    <view class="section-title">地图设置</view>
+    <view class="setting-list">
+      <view class="setting-item" bindtap="selectMapStyle">
+        <view class="setting-left">
+          <text class="setting-icon">🗺️</text>
+          <text class="setting-name">地图样式</text>
+        </view>
+        <view class="setting-right">
+          <text class="setting-value">{{mapStyle}}</text>
+          <text class="setting-arrow">›</text>
+        </view>
+      </view>
+      
+      <view class="setting-item">
+        <view class="setting-left">
+          <text class="setting-icon">🧭</text>
+          <text class="setting-name">显示指南针</text>
+        </view>
+        <switch checked="{{showCompass}}" bindchange="onShowCompassChange" color="#2E7D32"/>
+      </view>
+      
+      <view class="setting-item">
+        <view class="setting-left">
+          <text class="setting-icon">📏</text>
+          <text class="setting-name">显示比例尺</text>
+        </view>
+        <switch checked="{{showScale}}" bindchange="onShowScaleChange" color="#2E7D32"/>
+      </view>
+    </view>
+  </view>
+
+  <!-- 其他设置 -->
+  <view class="section">
+    <view class="section-title">其他</view>
+    <view class="setting-list">
+      <view class="setting-item" bindtap="clearCache">
+        <view class="setting-left">
+          <text class="setting-icon">🗑️</text>
+          <text class="setting-name">清除缓存</text>
+        </view>
+        <view class="setting-right">
+          <text class="setting-value">{{cacheSize}}</text>
+          <text class="setting-arrow">›</text>
+        </view>
+      </view>
+      
+      <view class="setting-item" bindtap="checkUpdate">
+        <view class="setting-left">
+          <text class="setting-icon">🔄</text>
+          <text class="setting-name">检查更新</text>
+        </view>
+        <view class="setting-right">
+          <text class="setting-value">v1.0.0</text>
+          <text class="setting-arrow">›</text>
+        </view>
+      </view>
+      
+      <view class="setting-item" bindtap="about">
+        <view class="setting-left">
+          <text class="setting-icon">ℹ️</text>
+          <text class="setting-name">关于我们</text>
+        </view>
+        <text class="setting-arrow">›</text>
+      </view>
+    </view>
+  </view>
+</view>
+

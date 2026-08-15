@@ -1,0 +1,55 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/login/login",
+    "pages/map/map",
+    "pages/navigation/navigation",
+    "pages/route/route",
+    "pages/flower/flower",
+    "pages/flower/detail/detail",
+    "pages/flower/routes/routes",
+    "pages/flower/map/map",
+    "pages/flower/nearby/nearby",
+    "pages/poi/poi",
+    "pages/poi/detail/detail",
+    "pages/poi/edit/edit",
+    "pages/favorites/favorites",
+    "pages/charging/charging",
+    "pages/charging/detail/detail",
+    "pages/charging/reservations/reservations",
+    "pages/charging/records/records",
+    "pages/charging/suggestion/suggestion",
+    "pages/parking/parking",
+    "pages/bus/bus",
+    "pages/news/news",
+    "pages/news/detail/detail",
+    "pages/routes/routes",
+    "pages/settings/settings",
+    "pages/profile/profile"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#2E7D32",
+    "navigationBarTitleText": "华农掌中行",
+    "navigationBarTextStyle": "white"
+  },
+  "tabBar": {
+    "color": "#666666",
+    "selectedColor": "#2E7D32",
+    "backgroundColor": "#ffffff",
+    "list": [
+      { "pagePath": "pages/index/index", "text": "首页" },
+      { "pagePath": "pages/map/map", "text": "地图" },
+      { "pagePath": "pages/poi/poi", "text": "发现" },
+      { "pagePath": "pages/profile/profile", "text": "我的" }
+    ]
+  },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "你的位置信息将用于校园导航"
+    }
+  },
+  "requiredPrivateInfos": ["getLocation", "chooseLocation"],
+  "lazyCodeLoading": "requiredComponents",
+  "sitemapLocation": "sitemap.json"
+}

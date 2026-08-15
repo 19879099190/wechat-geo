@@ -1,0 +1,217 @@
+.container {
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== 地图 ===== */
+.map {
+  flex: 1;
+  width: 100%;
+}
+
+/* 结果数量徽章 */
+.result-badge {
+  position: absolute;
+  top: 24rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(46, 125, 50, 0.9);
+  border-radius: 32rpx;
+  padding: 12rpx 32rpx;
+}
+
+.badge-text {
+  font-size: 26rpx;
+  color: #ffffff;
+  font-weight: 500;
+}
+
+/* ===== 底部控制面板 ===== */
+.control-panel {
+  background: #ffffff;
+  padding: 32rpx 40rpx 48rpx;
+  border-top: 1rpx solid #f0f0f0;
+  box-shadow: 0 -4rpx 20rpx rgba(0, 0, 0, 0.08);
+}
+
+.form-item {
+  margin-bottom: 28rpx;
+}
+
+.form-label {
+  display: block;
+  font-size: 26rpx;
+  color: #666666;
+  font-weight: 500;
+  margin-bottom: 16rpx;
+}
+
+/* 赏花点选择器 */
+.picker-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f8f9fa;
+  border-radius: 16rpx;
+  padding: 24rpx 30rpx;
+  border: 2rpx solid #e8e8e8;
+}
+
+.picker-text {
+  font-size: 30rpx;
+  color: #333333;
+  flex: 1;
+}
+
+.picker-arrow {
+  font-size: 24rpx;
+  color: #999999;
+  margin-left: 16rpx;
+}
+
+/* 半径选择按钮组 */
+.radius-options {
+  display: flex;
+  gap: 16rpx;
+}
+
+.radius-btn {
+  flex: 1;
+  text-align: center;
+  padding: 20rpx 0;
+  font-size: 28rpx;
+  color: #666666;
+  background: #f8f9fa;
+  border-radius: 16rpx;
+  border: 2rpx solid #e8e8e8;
+  transition: all 0.2s;
+}
+
+.radius-btn.active {
+  background: linear-gradient(135deg, #e91e8c 0%, #f06292 100%);
+  border-color: #e91e8c;
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: 0 4rpx 12rpx rgba(233, 30, 140, 0.3);
+}
+
+/* 搜索按钮 */
+.search-btn {
+  width: 100%;
+  height: 96rpx;
+  background: linear-gradient(135deg, #e91e8c 0%, #f06292 100%);
+  border-radius: 48rpx;
+  font-size: 34rpx;
+  font-weight: 600;
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 8rpx 24rpx rgba(233, 30, 140, 0.3);
+  margin-top: 8rpx;
+}
+
+.search-btn[disabled] {
+  background: #cccccc;
+  box-shadow: none;
+}
+
+.search-btn:active {
+  transform: scale(0.98);
+}
+
+/* ===== POI 详情弹窗 ===== */
+.poi-detail-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 100;
+}
+
+.poi-detail {
+  position: fixed;
+  bottom: -100%;
+  left: 0;
+  right: 0;
+  background: #ffffff;
+  border-radius: 32rpx 32rpx 0 0;
+  box-shadow: 0 -8rpx 32rpx rgba(0, 0, 0, 0.15);
+  transition: bottom 0.3s ease;
+  z-index: 101;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.poi-detail.show {
+  bottom: 0;
+}
+
+.detail-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 32rpx 40rpx 24rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.detail-title-row {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.detail-type-icon {
+  font-size: 48rpx;
+  margin-right: 20rpx;
+}
+
+.detail-name {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #333333;
+  flex: 1;
+}
+
+.detail-close {
+  font-size: 44rpx;
+  color: #999999;
+  padding: 0 8rpx;
+  line-height: 1;
+}
+
+.detail-body {
+  padding: 24rpx 40rpx 40rpx;
+}
+
+.detail-row {
+  display: flex;
+  align-items: flex-start;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #f8f8f8;
+}
+
+.detail-row:last-child {
+  border-bottom: none;
+}
+
+.detail-label {
+  font-size: 28rpx;
+  color: #999999;
+  width: 140rpx;
+  flex-shrink: 0;
+}
+
+.detail-value {
+  font-size: 28rpx;
+  color: #333333;
+  flex: 1;
+  line-height: 1.6;
+}
+
+.detail-value.highlight {
+  color: #e91e8c;
+  font-weight: 600;
+}

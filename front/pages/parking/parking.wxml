@@ -1,0 +1,35 @@
+<view class="parking-page">
+  <view class="hero">
+    <view class="hero-title">校园停车</view>
+    <view class="hero-subtitle">查看车位信息，快速导航到停车点</view>
+  </view>
+
+  <scroll-view class="filters" scroll-x>
+    <view class="filter-row">
+      <view wx:for="{{types}}" wx:key="value" class="chip {{type === item.value ? 'active' : ''}}" data-type="{{item.value}}" bindtap="onTypeTap">{{item.label}}</view>
+    </view>
+  </scroll-view>
+
+  <view wx:if="{{loading}}" class="state">加载中...</view>
+  <view wx:elif="{{lots.length === 0}}" class="state">暂无停车场数据</view>
+  <view wx:else class="lot-list">
+    <view wx:for="{{lots}}" wx:key="id" class="lot-card">
+      <view class="lot-head">
+        <view>
+          <view class="lot-name">{{item.name}}</view>
+          <view class="lot-type">{{typeText[item.type] || item.type}}</view>
+        </view>
+        <view class="availability {{item.available_spots > 0 ? 'free' : 'full'}}">
+          <text class="available-number">{{item.available_spots}}</text>
+          <text>可用</text>
+        </view>
+      </view>
+      <view class="address">{{item.location}}</view>
+      <view class="progress"><view class="progress-value" style="width: {{item.total_spots ? item.available_spots / item.total_spots * 100 : 0}}%"></view></view>
+      <view class="lot-foot">
+        <text>共 {{item.total_spots}} 个车位</text>
+        <button class="nav-btn" data-lot="{{item}}" bindtap="navigate">导航</button>
+      </view>
+    </view>
+  </view>
+</view>

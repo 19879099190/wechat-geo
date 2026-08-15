@@ -1,0 +1,303 @@
+<!--pages/charging/detail/detail.wxml-->
+<view class="container">
+  <view wx:if="{{loading}}" class="loading">
+    <view class="loading-icon">⚡</view>
+    <text>加载中...</text>
+  </view>
+
+  <view wx:else>
+    <!-- 充电桩信息 -->
+    <view class="info-card">
+      <view class="card-header-section">
+        <view class="station-name">{{station.name}}</view>
+        <view class="status-box">
+          <text class="status status-{{station.status}}">
+            <text class="status-icon">{{station.status === 0 ? '●' : station.status === 1 ? '⚡' : station.status === 2 ? '🕐' : '⚠'}}</text>
+            {{statusText[station.status]}}
+          </text>
+        </view>
+      </view>
+      
+      <view class="location">
+        <text class="location-icon">📍</text>
+        <text class="location-text">{{station.location}}</text>
+      </view>
+
+      <view class="detail-info">
+        <view class="info-item">
+          <view class="info-icon">⚡</view>
+          <view class="info-content">
+            <text class="label">功率</text>
+            <text class="value">{{station.power}}kW</text>
+          </view>
+        </view>
+        <view class="info-item">
+          <view class="info-icon">💰</view>
+          <view class="info-content">
+            <text class="label">价格</text>
+            <text class="value">{{station.price}}元/度</text>
+          </view>
+        </view>
+        <view class="info-item">
+          <view class="info-icon">🔌</view>
+          <view class="info-content">
+            <text class="label">插槽</text>
+            <text class="value">{{station.available_slots}}/{{station.total_slots}} 可用</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 我的预约信息 -->
+    <view class="reservation-card" wx:if="{{myReservation}}">
+      <view class="card-header">
+        <view class="card-title-wrapper">
+          <text class="card-icon">🎫</text>
+          <text class="card-title">我的预约</text>
+        </view>
+        <view class="reservation-status">
+          <text class="status-dot"></text>
+          <text>进行中</text>
+        </view>
+      </view>
+      <view class="reservation-info">
+        <view class="info-row">
+          <text class="info-icon">🕐</text>
+          <view class="info-text">
+            <text class="info-label">预约时间</text>
+            <text class="info-value">{{myReservation.startTime}}</text>
+          </view>
+        </view>
+        <view class="info-row">
+          <text class="info-icon">⏱</text>
+          <view class="info-text">
+            <text class="info-label">剩余时间</text>
+            <text class="info-value highlight">{{myReservation.remainingTime}}</text>
+          </view>
+        </view>
+        <view class="info-row">
+          <text class="info-icon">🔖</text>
+          <view class="info-text">
+            <text class="info-label">预约编号</text>
+            <text class="info-value">#{{myReservation.id}}</text>
+          </view>
+        </view>
+      </view>
+      <button class="btn-cancel" bindtap="cancelReservation">
+        <text class="btn-icon">✕</text>
+        <text>取消预约</text>
+      </button>
+    </view>
+
+    <!-- 操作按钮 -->
+    <view class="action-buttons">
+      <!-- 如果有预约，显示开始充电按钮 -->
+      <button wx:if="{{myReservation}}" class="btn-primary" bindtap="startCharging">
+        <view class="btn-content">
+          <text class="btn-icon-large">⚡</text>
+          <view class="btn-text-wrapper">
+            <text class="btn-text">开始充电</text>
+            <text class="btn-subtext">使用预约开始充电</text>
+          </view>
+        </view>
+      </button>
+      
+      <!-- 如果正在充电，显示结束充电和取消充电按钮 -->
+      <view wx:elif="{{isCharging}}" class="btn-group-vertical">
+        <button class="btn-primary charging" bindtap="stopCharging">
+          <view class="btn-content">
+            <text class="btn-icon-large">🔌</text>
+            <view class="btn-text-wrapper">
+              <text class="btn-text">结束充电</text>
+              <text class="btn-subtext">已充电 {{chargingDuration}}</text>
+            </view>
+          </view>
+        </button>
+        <button class="btn-cancel-charging" bindtap="cancelCharging">
+          <text class="btn-icon">✕</text>
+          <text>取消充电</text>
+        </button>
+      </view>
+      
+      <!-- 空闲状态，显示预约和充电按钮 -->
+      <view wx:elif="{{station.status === 0}}" class="btn-group-horizontal">
+        <button class="btn-primary half" bindtap="showReserveDialog">
+          <view class="btn-content">
+            <text class="btn-icon-large">📅</text>
+            <view class="btn-text-wrapper">
+              <text class="btn-text">预约充电</text>
+            </view>
+          </view>
+        </button>
+        <button class="btn-primary half" bindtap="startChargingDirect">
+          <view class="btn-content">
+            <text class="btn-icon-large">⚡</text>
+            <view class="btn-text-wrapper">
+              <text class="btn-text">立即充电</text>
+            </view>
+          </view>
+        </button>
+      </view>
+      
+      <!-- 不可用状态 -->
+      <button wx:else class="btn-primary" disabled>
+        <view class="btn-content">
+          <text class="btn-icon-large">🔒</text>
+          <view class="btn-text-wrapper">
+            <text class="btn-text">暂不可用</text>
+            <text class="btn-subtext">{{statusText[station.status]}}</text>
+          </view>
+        </view>
+      </button>
+      
+      <view class="btn-group">
+        <button class="btn-secondary" bindtap="navigateTo">
+          <text class="btn-icon">📍</text>
+          <text>导航</text>
+        </button>
+        <button class="btn-secondary" bindtap="reportFault">
+          <text class="btn-icon">⚠️</text>
+          <text>报障</text>
+        </button>
+      </view>
+    </view>
+
+    <!-- 充电记录 -->
+    <view class="records-card" wx:if="{{station.recentRecords && station.recentRecords.length > 0}}">
+      <view class="section-header">
+        <text class="section-icon">📊</text>
+        <text class="section-title">最近充电记录</text>
+      </view>
+      <view class="record-item" wx:for="{{station.recentRecords}}" wx:key="id">
+        <view class="record-avatar">{{item.user_name ? item.user_name.charAt(0) : '用'}}</view>
+        <view class="record-content">
+          <view class="record-user">{{item.user_name || '用户' + item.user_id}}</view>
+          <view class="record-time">{{item.start_time}}</view>
+        </view>
+        <view class="record-duration">{{item.duration || '进行中'}}</view>
+      </view>
+    </view>
+
+    <!-- 使用说明 -->
+    <view class="tips-card">
+      <view class="section-header">
+        <text class="section-icon">💡</text>
+        <text class="section-title">使用说明</text>
+      </view>
+      <view class="tip-item">
+        <view class="tip-number">1</view>
+        <text class="tip-text">预约后请在30分钟内到达，超时自动取消</text>
+      </view>
+      <view class="tip-item">
+        <view class="tip-number">2</view>
+        <text class="tip-text">充电时请注意安全，不要在充电时离开</text>
+      </view>
+      <view class="tip-item">
+        <view class="tip-number">3</view>
+        <text class="tip-text">充电完成后请及时拔出，方便他人使用</text>
+      </view>
+      <view class="tip-item">
+        <view class="tip-number">4</view>
+        <text class="tip-text">如遇故障请点击"报障"按钮反馈</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 预约对话框 -->
+  <view class="modal" wx:if="{{showReserveDialog}}" catchtap="hideReserveDialog">
+    <view class="modal-content" catchtap="stopPropagation">
+      <view class="modal-header">
+        <view class="modal-title-wrapper">
+          <text class="modal-icon">⚡</text>
+          <text class="modal-title">预约充电</text>
+        </view>
+        <text class="close-btn" catchtap="hideReserveDialog">✕</text>
+      </view>
+
+      <view class="modal-body">
+        <view class="form-item">
+          <text class="form-label">
+            <text class="label-icon">🔌</text>
+            充电桩
+          </text>
+          <view class="form-value-box">
+            <text class="form-value">{{station.name}}</text>
+          </view>
+        </view>
+
+        <view class="form-item">
+          <text class="form-label">
+            <text class="label-icon">📅</text>
+            预约日期
+          </text>
+          <picker mode="date" value="{{reserveDate}}" start="{{reserveDate}}" bindchange="onDateChange">
+            <view class="picker-value">
+              <text>{{reserveDate || '选择日期'}}</text>
+              <text class="picker-arrow">›</text>
+            </view>
+          </picker>
+        </view>
+
+        <view class="form-item">
+          <text class="form-label">
+            <text class="label-icon">🕐</text>
+            预约时间
+          </text>
+          <picker mode="time" value="{{reserveTime}}" bindchange="onTimeChange">
+            <view class="picker-value">
+              <text>{{reserveTime || '选择时间'}}</text>
+              <text class="picker-arrow">›</text>
+            </view>
+          </picker>
+        </view>
+
+        <view class="form-item">
+          <text class="form-label">
+            <text class="label-icon">⏱</text>
+            预计时长
+          </text>
+          <picker mode="selector" range="{{durationOptions}}" value="{{durationIndex}}" bindchange="onDurationChange">
+            <view class="picker-value">
+              <text>{{durationOptions[durationIndex]}}</text>
+              <text class="picker-arrow">›</text>
+            </view>
+          </picker>
+        </view>
+
+        <view class="form-item">
+          <text class="form-label">
+            <text class="label-icon">📱</text>
+            联系电话
+          </text>
+          <input class="form-input" type="number" placeholder="请输入手机号码" value="{{phone}}" bindinput="onPhoneInput" maxlength="11"/>
+        </view>
+
+        <view class="cost-info">
+          <view class="cost-header">
+            <text class="cost-icon">💰</text>
+            <text class="cost-title">费用预估</text>
+          </view>
+          <view class="cost-row">
+            <text class="cost-label">预计费用</text>
+            <text class="cost-value">¥{{estimatedCost}}</text>
+          </view>
+          <view class="cost-detail">
+            <text class="cost-detail-item">功率: {{station.power}}kW</text>
+            <text class="cost-detail-item">单价: {{station.price}}元/度</text>
+          </view>
+          <view class="cost-tip">💡 实际费用以充电结束时为准</view>
+        </view>
+      </view>
+
+      <view class="modal-footer">
+        <button class="modal-btn cancel" bindtap="hideReserveDialog">
+          <text>取消</text>
+        </button>
+        <button class="modal-btn confirm" bindtap="confirmReserve">
+          <text class="confirm-icon">✓</text>
+          <text>确认预约</text>
+        </button>
+      </view>
+    </view>
+  </view>
+</view>

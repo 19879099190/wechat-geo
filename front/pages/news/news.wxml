@@ -1,0 +1,24 @@
+<!--pages/news/news.wxml-->
+<view class="container">
+  <!-- 校园动态列表 -->
+  <view class="news-list">
+    <view 
+      wx:for="{{newsList}}" 
+      wx:key="id"
+      class="news-card"
+      bindtap="goToDetail"
+      data-id="{{item.id}}"
+    >
+      <view class="news-title">{{item.title}}</view>
+      <view class="news-meta">
+        <text class="news-time">{{item.time}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view wx:if="{{newsList.length === 0}}" class="empty">
+    <text class="empty-icon">📰</text>
+    <text class="empty-text">暂无动态</text>
+  </view>
+</view>

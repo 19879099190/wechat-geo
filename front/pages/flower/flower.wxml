@@ -1,0 +1,187 @@
+<!-- 赏花专题页面 -->
+<view class="flower-container">
+  <!-- 顶部搜索栏 -->
+  <view class="search-bar">
+    <view class="search-input-wrapper">
+      <icon class="search-icon" type="search" size="16" color="#999"></icon>
+      <input 
+        class="search-input" 
+        placeholder="搜索赏花点..." 
+        value="{{searchKeyword}}"
+        bindinput="onSearchInput"
+      />
+      <icon wx:if="{{searchKeyword}}" class="clear-icon" type="clear" size="16" bindtap="clearSearch"></icon>
+    </view>
+  </view>
+
+  <!-- 统计卡片 -->
+  <view class="stats-card">
+    <view class="stat-item">
+      <text class="stat-number">{{stats.totalSpots}}</text>
+      <text class="stat-label">赏花点</text>
+    </view>
+    <view class="stat-divider"></view>
+    <view class="stat-item">
+      <text class="stat-number blooming">{{stats.blooming}}</text>
+      <text class="stat-label">正在盛开</text>
+    </view>
+    <view class="stat-divider"></view>
+    <view class="stat-item">
+      <text class="stat-number upcoming">{{stats.upcoming}}</text>
+      <text class="stat-label">即将开放</text>
+    </view>
+  </view>
+
+  <!-- 功能按钮组 -->
+  <view class="function-buttons">
+    <view class="function-btn" bindtap="viewRoutes">
+      <icon class="function-icon">🗺️</icon>
+      <text class="function-text">推荐路线</text>
+    </view>
+    <view class="function-btn" bindtap="showGisAnalysis">
+      <icon class="function-icon">📍</icon>
+      <text class="function-text">周边搜索</text>
+    </view>
+    <view class="function-btn" bindtap="toggleHeatmap">
+      <icon class="function-icon">🔥</icon>
+      <text class="function-text">{{showHeatmap ? '关闭' : '热力图'}}</text>
+    </view>
+    <view class="function-btn" bindtap="viewOnMap">
+      <icon class="function-icon">🗾</icon>
+      <text class="function-text">地图模式</text>
+    </view>
+  </view>
+
+  <!-- 分类标签 -->
+  <scroll-view class="category-scroll" scroll-x>
+    <view class="category-list">
+      <view 
+        wx:for="{{categories}}" 
+        wx:key="index"
+        class="category-item {{currentCategory === item ? 'active' : ''}}"
+        data-category="{{item}}"
+        bindtap="onCategoryChange"
+      >
+        {{item}}
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 赏花点列表 -->
+  <view class="spots-list">
+    <view 
+      wx:for="{{filteredSpots}}" 
+      wx:key="id"
+      class="spot-card"
+      bindtap="viewDetail"
+      data-id="{{item.id}}"
+    >
+      <!-- 图片 -->
+      <view class="spot-image-wrapper">
+      <image
+        class="spot-image"
+        src="{{item.displayImageUrl}}"
+        mode="aspectFill"
+        lazy-load="{{true}}"
+        fade-show="{{true}}"
+        binderror="onSpotImageError"
+        data-id="{{item.id}}"
+        data-src="{{item.displayImageUrl}}"
+      ></image>
+        <view class="spot-status {{item.status}}">
+          {{item.status === 'blooming' ? '盛开中' : item.status === 'upcoming' ? '即将开放' : '已结束'}}
+        </view>
+        <view class="spot-badges">
+          <text wx:if="{{item.hasLiveStream}}" class="badge live">🔴 云赏花</text>
+          <text wx:if="{{item.has360}}" class="badge">360°</text>
+          <text wx:if="{{item.hasVideo}}" class="badge">视频</text>
+        </view>
+      </view>
+
+      <!-- 信息 -->
+      <view class="spot-info">
+        <view class="spot-header">
+          <text class="spot-name">{{item.name}}</text>
+          <view class="spot-rating">
+            <text class="rating-star">⭐</text>
+            <text class="rating-value">{{item.rating}}</text>
+          </view>
+        </view>
+
+        <view class="spot-meta">
+          <text class="spot-type">{{item.type}}</text>
+          <text class="spot-time">🌸 {{item.bestTime}}</text>
+          <text wx:if="{{item.distance}}" class="spot-distance">📍 {{item.distanceText}}</text>
+        </view>
+
+        <view class="spot-description">{{item.description}}</view>
+
+        <view class="spot-features">
+          <text wx:for="{{item.features}}" wx:key="index" wx:for-item="feature" class="feature-tag">
+            {{feature}}
+          </text>
+          </view>
+
+        <view class="spot-footer">
+          <text class="view-count">👁️ {{item.viewCount}}次浏览</text>
+          <view class="spot-actions">
+            <button class="action-btn" catchtap="navigateToSpot" data-spot="{{item}}">
+              导航
+            </button>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view wx:if="{{filteredSpots.length === 0}}" class="empty-state">
+      <text class="empty-icon">🌸</text>
+      <text class="empty-text">暂无赏花点</text>
+    </view>
+  </view>
+
+  <!-- GIS分析面板 -->
+  <view wx:if="{{showGisPanel}}" class="gis-panel">
+    <view class="panel-mask" bindtap="hideGisPanel"></view>
+    <view class="panel-content">
+      <view class="panel-header">
+        <text class="panel-title">周边搜索</text>
+        <icon class="close-icon" type="clear" size="20" bindtap="hideGisPanel"></icon>
+      </view>
+
+      <view class="panel-body">
+        <view class="form-item">
+          <text class="form-label">搜索半径</text>
+          <picker mode="selector" range="{{bufferRadiusOptions}}" value="{{bufferRadius}}" bindchange="onRadiusChange">
+            <view class="picker-value">{{bufferRadius}}米 ▼</view>
+          </picker>
+        </view>
+
+        <view class="button-group">
+          <button class="primary-btn" bindtap="bufferAnalysis">缓冲区分析</button>
+          <button class="secondary-btn" bindtap="nearbySearch">周边搜索</button>
+        </view>
+
+        <!-- 搜索结果 -->
+        <view wx:if="{{nearbyResults.length > 0}}" class="search-results">
+          <view class="results-header">
+            <text class="results-title">找到 {{nearbyResults.length}} 个赏花点</text>
+          </view>
+          <view 
+            wx:for="{{nearbyResults}}" 
+            wx:key="id"
+            class="result-item"
+            bindtap="viewDetail"
+            data-id="{{item.id}}"
+          >
+            <view class="result-info">
+              <text class="result-name">{{item.name}}</text>
+              <text class="result-type">{{item.type}}</text>
+            </view>
+            <text class="result-distance">{{item.distanceText}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

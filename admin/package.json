@@ -1,0 +1,9 @@
+{
+  "name": "wechat-geo-admin",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Wechat Geo 管理后台前端",
+  "scripts": {
+    "start": "node server.js"
+  }
+}

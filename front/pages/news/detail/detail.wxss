@@ -1,0 +1,36 @@
+/* pages/news/detail/detail.wxss */
+.container {
+  min-height: 100vh;
+  background: #fff;
+}
+
+.news-header {
+  padding: 40rpx 30rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.news-title {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #333;
+  line-height: 1.6;
+  margin-bottom: 20rpx;
+}
+
+.news-time {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.news-time::before {
+  content: '🕐';
+  margin-right: 8rpx;
+}
+
+.news-content {
+  padding: 40rpx 30rpx;
+  font-size: 30rpx;
+  line-height: 1.8;
+  color: #333;
+}
+

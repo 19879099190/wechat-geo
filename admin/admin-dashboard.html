@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>管理员后台 - 华农掌中行</title>
+  <link rel="stylesheet" href="admin-dashboard.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar-content">
+      <div class="navbar-brand">
+        <span>🔐</span>
+        <span>华农掌中行 - 管理员后台</span>
+      </div>
+      <div class="navbar-user">
+        <div class="user-info">
+          <span id="adminName">管理员</span>
+          <span id="adminRole" class="badge"></span>
+        </div>
+        <button class="logout-btn" onclick="logout()">退出登录</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div id="alert" class="alert"></div>
+
+    <!-- 统计卡片 -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">👥</div>
+        <div class="stat-label">用户总数</div>
+        <div class="stat-value" id="userCount">-</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📍</div>
+        <div class="stat-label">POI总数</div>
+        <div class="stat-value" id="poiCount">-</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🔋</div>
+        <div class="stat-label">充电桩总数</div>
+        <div class="stat-value" id="chargingCount">-</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🚌</div>
+        <div class="stat-label">校巴线路</div>
+        <div class="stat-value" id="busCount">-</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🆕</div>
+        <div class="stat-label">今日新增用户</div>
+        <div class="stat-value" id="todayUsers">-</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">⚡</div>
+        <div class="stat-label">今日充电次数</div>
+        <div class="stat-value" id="todayCharging">-</div>
+      </div>
+    </div>
+
+    <!-- 标签页 -->
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab('admins')">👤 管理员管理</div>
+      <div class="tab" onclick="switchTab('users')">👥 用户管理</div>
+      <div class="tab" onclick="switchTab('poi')">📍 POI管理</div>
+      <div class="tab" onclick="switchTab('flower')">🌸 赏花点管理</div>
+      <div class="tab" onclick="switchTab('routes')">🗺️ 赏花路线</div>
+      <div class="tab" onclick="switchTab('checkins')">📷 打卡记录</div>
+      <div class="tab" onclick="switchTab('news')">📰 校园动态</div>
+      <div class="tab" onclick="switchTab('charging')">🔋 充电桩管理</div>
+      <div class="tab" onclick="switchTab('bus')">🚌 校巴管理</div>
+      <div class="tab" onclick="switchTab('busstops')">📍 站点管理</div>
+      <div class="tab" onclick="switchTab('database')">🗄️ 数据库管理</div>
+      <div class="tab" onclick="switchTab('settings')">⚙️ 个人设置</div>
+    </div>
+
+    <!-- 内容区域 -->
+    <div class="content-card">
+      <!-- 管理员管理 -->
+      <div id="admins-section" class="section active">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <h2 class="section-title">管理员列表</h2>
+          <button class="btn btn-primary" onclick="showAddAdminModal()" id="addAdminBtn">➕ 添加管理员</button>
+        </div>
+        <table id="adminsTable">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>账号</th>
+              <th>姓名</th>
+              <th>角色</th>
+              <th>状态</th>
+              <th>最后登录</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="adminsTableBody"></tbody>
+        </table>
+      </div>
+
+      <!-- 用户管理 -->
+      <div id="users-section" class="section">
+        <h2 class="section-title">用户列表</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>昵称</th>
+              <th>手机号</th>
+              <th>收藏数</th>
+              <th>注册时间</th>
+              <th>最后登录</th>
+            </tr>
+          </thead>
+          <tbody id="usersTableBody"></tbody>
+        </table>
+      </div>
+
+      <!-- POI管理 -->
+      <div id="poi-section" class="section">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <h2 class="section-title">POI管理</h2>
+          <button class="btn btn-primary" onclick="showAddPoiModal()">➕ 添加POI</button>
+        </div>
+        
+        <!-- 搜索框 -->
+        <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+          <input 
+            type="text" 
+            id="poiSearchInput" 
+            placeholder="搜索POI名称..." 
+            style="flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 6px;"
+          />
+          <select 
+            id="poiTypeFilter" 
+            style="padding: 10px; border: 1px solid #ddd; border-radius: 6px;"
+          >
+            <option value="">全部类型</option>
+            <option value="canteen">食堂</option>
+            <option value="library">图书馆</option>
+            <option value="classroom">教学楼</option>
+            <option value="dormitory">宿舍</option>
+            <option value="scenic">景点</option>
+            <option value="sports">运动场馆</option>
+            <option value="office">办公楼</option>
+            <option value="shop">商店</option>
+          </select>
+          <button class="btn btn-primary" onclick="searchPoi()">🔍 搜索</button>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>名称</th>
+              <th>类型</th>
+              <th>坐标</th>
+              <th>评分</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="poiTableBody"></tbody>
+        </table>
+      </div>
+
+      <!-- 充电桩管理 -->
+      <div id="charging-section" class="section">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <h2 class="section-title">充电桩管理</h2>
+          <button class="btn btn-primary" onclick="showAddChargingModal()">➕ 添加充电桩</button>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>名称</th>
+              <th>位置</th>
+              <th>状态</th>
+              <th>插槽</th>
+              <th>价格</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="chargingTableBody"></tbody>
+        </table>
+      </div>
+
+      <!-- 校巴管理 -->
+      <div id="bus-section" class="section">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <h2 class="section-title">校巴线路管理</h2>
+          <button class="btn btn-primary" onclick="showAddBusModal()">➕ 添加线路</button>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>线路编号</th>
+              <th>线路名称</th>
+              <th>起点-终点</th>
+              <th>站点数</th>
+              <th>运营时间</th>
+              <th>发车间隔</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="busTableBody"></tbody>
+        </table>
+      </div>
+
+      <!-- 站点管理 -->
+      <div id="busstops-section" class="section">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <h2 class="section-title">校巴站点管理</h2>
+          <button class="btn btn-primary" onclick="showAddStopModal()">➕ 添加站点</button>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>站点名称</th>
+              <th>纬度</th>
+              <th>经度</th>
+              <th>关联线路数</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="busStopsTableBody"></tbody>
+        </table>
+      </div>
+
+      <!-- 赏花点管理 -->
+      <div id="flower-section" class="section">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <h2 class="section-title">赏花点管理</h2>
+          <button class="btn btn-primary" onclick="showAddFlowerModal()">➕ 添加赏花点</button>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>名称</th>
+              <th>类型</th>
+              <th>位置</th>
+              <th>最佳观赏期</th>
+              <th>评分</th>
+              <th>打卡人数</th>
+              <th>状态</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="flowerTableBody"></tbody>
+        </table>
+      </div>
+
+      <!-- 打卡记录管理 -->
+      <div id="checkins-section" class="section">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <h2 class="section-title">打卡记录</h2>
+          <div style="display: flex; gap: 10px; align-items: center;">
+            <select id="checkinSpotFilter" onchange="loadCheckins()" style="padding: 6px 10px; border: 1px solid #ddd; border-radius: 6px;">
+              <option value="">全部赏花点</option>
+            </select>
+            <span id="checkinTotal" style="color: #666; font-size: 14px;"></span>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>用户</th>
+              <th>赏花点</th>
+              <th>打卡图片</th>
+              <th>评分</th>
+              <th>评论</th>
+              <th>打卡时间</th>
+            </tr>
+          </thead>
+          <tbody id="checkinsTableBody"></tbody>
+        </table>
+        <div id="checkinsPagination" style="margin-top: 15px; text-align: center;"></div>
+      </div>
+
+      <!-- 赏花路线管理 -->
+      <div id="routes-section" class="section">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <h2 class="section-title">赏花路线列表</h2>
+          <button class="btn btn-primary" onclick="showAddRouteModal()">➕ 添加路线</button>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>路线名称</th>
+              <th>时长</th>
+              <th>距离</th>
+              <th>难度</th>
+              <th>最佳时间</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="routesTableBody"></tbody>
+        </table>
+      </div>
+
+      <!-- 校园动态管理 -->
+      <div id="news-section" class="section">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <h2 class="section-title">校园动态列表</h2>
+          <button class="btn btn-primary" onclick="showAddNewsModal()">➕ 发布动态</button>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>标题</th>
+              <th>作者</th>
+              <th>浏览量</th>
+              <th>点赞数</th>
+              <th>发布时间</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="newsTableBody"></tbody>
+        </table>
+      </div>
+
+      <!-- 数据库管理 -->
+      <div id="database-section" class="section">
+        <h2 class="section-title">数据库管理工具</h2>
+        
+        <div style="margin-bottom: 30px;">
+          <h3 style="margin-bottom: 15px;">📊 数据库信息</h3>
+          <button class="btn btn-primary" onclick="showAllTables()">查看所有表</button>
+          <button class="btn btn-primary" onclick="showTableStats()">表统计信息</button>
+        </div>
+
+        <div style="margin-bottom: 30px;">
+          <h3 style="margin-bottom: 15px;">📈 数据统计</h3>
+          <button class="btn btn-primary" onclick="showFavoriteStats()">收藏统计</button>
+          <button class="btn btn-primary" onclick="showPoiStats()">POI统计</button>
+        </div>
+
+        <div id="dbResult" style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-top: 20px; display: none; max-height: 500px; overflow-y: auto;"></div>
+      </div>
+
+      <!-- 个人设置 -->
+      <div id="settings-section" class="section">
+        <h2 class="section-title">修改密码</h2>
+        <form id="changePasswordForm" style="max-width: 500px;">
+          <div class="form-group">
+            <label>原密码</label>
+            <input type="password" id="oldPassword" required>
+          </div>
+          <div class="form-group">
+            <label>新密码</label>
+            <input type="password" id="newPassword" required minlength="6">
+          </div>
+          <div class="form-group">
+            <label>确认新密码</label>
+            <input type="password" id="confirmPassword" required minlength="6">
+          </div>
+          <button type="submit" class="btn btn-primary">修改密码</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- 添加管理员模态框 -->
+  <div id="addAdminModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>添加管理员</h2>
+        <button class="modal-close" onclick="closeAddAdminModal()">×</button>
+      </div>
+      <form id="addAdminForm">
+        <div class="form-group">
+          <label>账号 *</label>
+          <input type="text" name="username" required>
+        </div>
+        <div class="form-group">
+          <label>密码 *</label>
+          <input type="password" name="password" required minlength="6">
+        </div>
+        <div class="form-group">
+          <label>姓名</label>
+          <input type="text" name="name">
+        </div>
+        <div class="form-group">
+          <label>邮箱</label>
+          <input type="email" name="email">
+        </div>
+        <div class="form-group">
+          <label>手机号</label>
+          <input type="tel" name="phone">
+        </div>
+        <div class="form-group">
+          <label>角色</label>
+          <select name="role">
+            <option value="normal">普通管理员</option>
+            <option value="super">超级管理员</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-success">添加</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 添加POI模态框 -->
+  <div id="addPoiModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="poiModalTitle">添加POI</h2>
+        <button class="modal-close" onclick="closePoiModal()">×</button>
+      </div>
+      <form id="poiForm">
+        <input type="hidden" name="id" id="poiId">
+        <div class="form-group">
+          <label>名称 *</label>
+          <input type="text" name="name" id="poiName" required>
+        </div>
+        <div class="form-group">
+          <label>类型 *</label>
+          <select name="type" id="poiType" required>
+            <option value="canteen">食堂</option>
+            <option value="library">图书馆</option>
+            <option value="classroom">教学楼</option>
+            <option value="dormitory">宿舍</option>
+            <option value="scenic">景点</option>
+            <option value="sports">运动场馆</option>
+            <option value="office">办公楼</option>
+            <option value="shop">商店</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>纬度 *</label>
+          <input type="number" step="0.000001" name="latitude" id="poiLatitude" required>
+        </div>
+        <div class="form-group">
+          <label>经度 *</label>
+          <input type="number" step="0.000001" name="longitude" id="poiLongitude" required>
+        </div>
+        <div class="form-group">
+          <label>描述</label>
+          <input type="text" name="description" id="poiDescription">
+        </div>
+        <div class="form-group">
+          <label>POI 点评</label>
+          <textarea name="comment" id="poiComment" rows="3"></textarea>
+        </div>
+        <div class="form-group">
+          <label>评分 (0-5)</label>
+          <input type="number" step="0.1" min="0" max="5" name="rating" id="poiRating" value="0">
+        </div>
+        <div class="form-group">
+          <label>开放时间</label>
+          <input type="text" name="open_time" id="poiOpenTime" placeholder="例如: 08:00-22:00">
+        </div>
+        <button type="submit" class="btn btn-success">保存</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 添加充电桩模态框 -->
+  <div id="addChargingModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="chargingModalTitle">添加充电桩</h2>
+        <button class="modal-close" onclick="closeChargingModal()">×</button>
+      </div>
+      <form id="chargingForm">
+        <input type="hidden" name="id" id="chargingId">
+        <div class="form-group">
+          <label>名称 *</label>
+          <input type="text" name="name" id="chargingName" required>
+        </div>
+        <div class="form-group">
+          <label>位置描述 *</label>
+          <input type="text" name="location" id="chargingLocation" required>
+        </div>
+        <div class="form-group">
+          <label>纬度 *</label>
+          <input type="number" step="0.000001" name="latitude" id="chargingLatitude" required>
+        </div>
+        <div class="form-group">
+          <label>经度 *</label>
+          <input type="number" step="0.000001" name="longitude" id="chargingLongitude" required>
+        </div>
+        <div class="form-group">
+          <label>状态</label>
+          <select name="status" id="chargingStatus">
+            <option value="0">空闲</option>
+            <option value="1">充电中</option>
+            <option value="2">已预约</option>
+            <option value="3">故障</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>功率 (W)</label>
+          <input type="number" name="power" id="chargingPower" value="1000">
+        </div>
+        <div class="form-group">
+          <label>总插槽数</label>
+          <input type="number" name="total_slots" id="chargingTotalSlots" value="4">
+        </div>
+        <div class="form-group">
+          <label>可用插槽数</label>
+          <input type="number" name="available_slots" id="chargingAvailableSlots" value="4">
+        </div>
+        <div class="form-group">
+          <label>价格 (元/度)</label>
+          <input type="number" step="0.01" name="price" id="chargingPrice" value="0.8">
+        </div>
+        <button type="submit" class="btn btn-success">保存</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 添加校巴模态框 -->
+  <div id="addBusModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="busModalTitle">添加校巴线路</h2>
+        <button class="modal-close" onclick="closeBusModal()">×</button>
+      </div>
+      <form id="busForm">
+        <input type="hidden" name="id" id="busId">
+        <div class="form-group">
+          <label>线路编号 *</label>
+          <input type="text" name="number" id="busNumber" required>
+        </div>
+        <div class="form-group">
+          <label>线路名称 *</label>
+          <input type="text" name="name" id="busName" required>
+        </div>
+        <div class="form-group">
+          <label>起点站 *</label>
+          <input type="text" name="start_station" id="busStartStation" required>
+        </div>
+        <div class="form-group">
+          <label>终点站 *</label>
+          <input type="text" name="end_station" id="busEndStation" required>
+        </div>
+        <div class="form-group">
+          <label>运营时间</label>
+          <input type="text" name="operating_time" id="busOperatingTime" placeholder="例如: 07:00-22:00">
+        </div>
+        <div class="form-group">
+          <label>发车间隔 (分钟)</label>
+          <input type="number" name="interval_minutes" id="busIntervalMinutes" value="15">
+        </div>
+        <button type="submit" class="btn btn-success">保存</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 线路站点配置模态框 -->
+  <div id="lineStopsModal" class="modal">
+    <div class="modal-content" style="max-width: 700px;">
+      <div class="modal-header">
+        <h2 id="lineStopsTitle">配置站点</h2>
+        <button class="modal-close" onclick="closeLineStopsModal()">×</button>
+      </div>
+      <div style="padding: 20px;">
+        <div style="display: flex; gap: 20px;">
+          <!-- 可选站点 -->
+          <div style="flex: 1;">
+            <h3 style="margin-bottom: 10px; font-size: 14px; color: #666;">可选站点（点击添加）</h3>
+            <div id="availableStopsList" style="border: 1px solid #ddd; border-radius: 6px; padding: 8px; max-height: 400px; overflow-y: auto;"></div>
+          </div>
+          <!-- 已选站点 -->
+          <div style="flex: 1;">
+            <h3 style="margin-bottom: 10px; font-size: 14px; color: #666;">已选站点（按顺序排列）</h3>
+            <div id="selectedStopsList" style="border: 1px solid #ddd; border-radius: 6px; padding: 8px; min-height: 100px; max-height: 400px; overflow-y: auto;"></div>
+          </div>
+        </div>
+        <div style="margin-top: 15px; text-align: right;">
+          <button class="btn btn-primary" onclick="saveLineStops()">💾 保存站点配置</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 添加/编辑站点模态框 -->
+  <div id="addStopModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="stopModalTitle">添加站点</h2>
+        <button class="modal-close" onclick="closeStopModal()">×</button>
+      </div>
+      <form id="stopForm">
+        <input type="hidden" id="stopId">
+        <div class="form-group">
+          <label>站点名称 *</label>
+          <input type="text" id="stopName" required placeholder="例如: 西南门站">
+        </div>
+        <div class="form-group">
+          <label>纬度 *</label>
+          <input type="number" step="0.0000001" id="stopLatitude" required placeholder="例如: 23.158">
+        </div>
+        <div class="form-group">
+          <label>经度 *</label>
+          <input type="number" step="0.0000001" id="stopLongitude" required placeholder="例如: 113.352">
+        </div>
+        <p style="font-size: 12px; color: #999; margin-bottom: 15px;">提示：可在腾讯地图拾取坐标 https://lbs.qq.com/getPoint/</p>
+        <button type="submit" class="btn btn-success">保存</button>
+      </form>
+    </div>
+  </div>
+  <div id="addFlowerModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="flowerModalTitle">添加赏花点</h2>
+        <button class="modal-close" onclick="closeFlowerModal()">×</button>
+      </div>
+      <form id="flowerForm">
+        <input type="hidden" name="id" id="flowerId">
+        <div class="form-group">
+          <label>赏花点名称 *</label>
+          <input type="text" name="name" id="flowerName" required>
+        </div>
+        <div class="form-group">
+          <label>花卉类型 *</label>
+          <select name="type" id="flowerType" required>
+            <option value="紫荆花">紫荆花</option>
+            <option value="樱花">樱花</option>
+            <option value="木棉花">木棉花</option>
+            <option value="桃花">桃花</option>
+            <option value="荷花">荷花</option>
+            <option value="其他">其他</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>纬度 *</label>
+          <input type="number" step="0.000001" name="latitude" id="flowerLatitude" required placeholder="例如: 23.158">
+        </div>
+        <div class="form-group">
+          <label>经度 *</label>
+          <input type="number" step="0.000001" name="longitude" id="flowerLongitude" required placeholder="例如: 113.352">
+        </div>
+        <div class="form-group">
+          <label>描述</label>
+          <textarea name="description" id="flowerDescription" rows="3"></textarea>
+        </div>
+        <div class="form-group">
+          <label>最佳观赏期</label>
+          <input type="text" name="best_time" id="flowerBestTime" placeholder="例如: 3月-4月">
+        </div>
+        <div class="form-group">
+          <label>特色标签 (逗号分隔)</label>
+          <input type="text" name="features" id="flowerFeatures" placeholder="例如: 拍照打卡,浪漫约会">
+        </div>
+        <div class="form-group">
+          <label>评分</label>
+          <input type="number" step="0.1" min="0" max="5" name="rating" id="flowerRating" value="0">
+        </div>
+        <div class="form-group">
+          <label>打卡人数</label>
+          <input type="number" min="0" name="checkin_count" id="flowerCheckinCount" value="0">
+        </div>
+        <div class="form-group">
+          <label>状态</label>
+          <select name="status" id="flowerStatus">
+            <option value="upcoming">即将开放</option>
+            <option value="blooming">正在盛开</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>图片上传</label>
+          <input type="file" id="flowerImageUpload" accept="image/*" multiple style="margin-bottom: 10px;">
+          <div id="flowerImagePreview" style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 10px;"></div>
+          <small style="color: #666;">支持多图上传，单张最大5MB，格式: jpg/png/gif/webp</small>
+        </div>
+        <div class="form-group">
+          <label>图片URL (逗号分隔)</label>
+          <input type="text" name="images" id="flowerImages" placeholder="例如: /images/flower/flower_xxx.jpg" readonly style="background: #f5f5f5;">
+          <small style="color: #666;">上传图片后自动填充，也可手动编辑</small>
+        </div>
+        <div class="form-group">
+          <label style="display: flex; align-items: center; gap: 8px;">
+            <input type="checkbox" name="has_video" id="flowerHasVideo" style="width: auto; margin: 0;">
+            <span>有视频</span>
+          </label>
+        </div>
+        <div class="form-group">
+          <label style="display: flex; align-items: center; gap: 8px;">
+            <input type="checkbox" name="has_360" id="flowerHas360" style="width: auto; margin: 0;">
+            <span>有360全景</span>
+          </label>
+        </div>
+        <div class="form-group">
+          <label style="display: flex; align-items: center; gap: 8px;">
+            <input type="checkbox" name="has_live_stream" id="flowerHasLiveStream" style="width: auto; margin: 0;">
+            <span>有直播</span>
+          </label>
+        </div>
+        <button type="submit" class="btn btn-success">保存</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 添加新闻模态框 -->
+  <div id="addNewsModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="newsModalTitle">发布动态</h2>
+        <button class="modal-close" onclick="closeNewsModal()">×</button>
+      </div>
+      <form id="newsForm">
+        <input type="hidden" name="id" id="newsId">
+        <div class="form-group">
+          <label>标题 *</label>
+          <input type="text" name="title" id="newsTitle" required>
+        </div>
+        <div class="form-group">
+          <label>内容 *</label>
+          <textarea name="content" id="newsContent" rows="6" required></textarea>
+        </div>
+        <div class="form-group">
+          <label>封面图</label>
+          <input type="text" name="image" id="newsImage" placeholder="图片URL">
+        </div>
+        <div class="form-group">
+          <label>作者</label>
+          <input type="text" name="author" id="newsAuthor" placeholder="默认为管理员">
+        </div>
+        <button type="submit" class="btn btn-success">保存</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 添加路线模态框 -->
+  <div id="addRouteModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="routeModalTitle">添加赏花路线</h2>
+        <button class="modal-close" onclick="closeRouteModal()">×</button>
+      </div>
+      <form id="routeForm">
+        <input type="hidden" name="id" id="routeId">
+        <div class="form-group">
+          <label>路线名称 *</label>
+          <input type="text" name="name" id="routeName" required>
+        </div>
+        <div class="form-group">
+          <label>游览时长</label>
+          <input type="text" name="duration" id="routeDuration" placeholder="例如: 1-2小时">
+        </div>
+        <div class="form-group">
+          <label>路线距离(米)</label>
+          <input type="number" name="distance" id="routeDistance" placeholder="例如: 2000">
+        </div>
+        <div class="form-group">
+          <label>难度等级</label>
+          <select name="difficulty" id="routeDifficulty">
+            <option value="简单">简单</option>
+            <option value="中等">中等</option>
+            <option value="困难">困难</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>途经赏花点</label>
+          <div id="routeSpotsSelector" style="border: 1px solid #ddd; border-radius: 6px; padding: 10px; max-height: 250px; overflow-y: auto;">
+            <p style="color: #999; margin: 0;">加载赏花点列表中...</p>
+          </div>
+          <div id="routeSpotsSelected" style="margin-top: 8px;">
+            <p style="font-size: 12px; color: #666; margin: 4px 0;">已选景点（拖拽或点击箭头调整顺序）：</p>
+            <div id="routeSpotsOrder" style="display: flex; flex-direction: column; gap: 6px;"></div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>路线描述</label>
+          <textarea name="description" id="routeDescription" rows="3"></textarea>
+        </div>
+        <div class="form-group">
+          <label>最佳时间</label>
+          <input type="text" name="best_time" id="routeBestTime" placeholder="例如: 3月-4月">
+        </div>
+        <div class="form-group">
+          <label>标签 (逗号分隔)</label>
+          <input type="text" name="tags" id="routeTags" placeholder="例如: 赏花,拍照">
+        </div>
+        <div class="form-group">
+          <label>路线亮点 (逗号分隔)</label>
+          <input type="text" name="highlights" id="routeHighlights" placeholder="例如: 紫荆花海,樱花大道">
+        </div>
+        <div class="form-group">
+          <label>游玩贴士 (逗号分隔)</label>
+          <input type="text" name="tips" id="routeTips" placeholder="例如: 建议穿运动鞋,带好防晒">
+        </div>
+        <button type="submit" class="btn btn-success">保存</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="admin-dashboard.js"></script>
+</body>
+</html>
+

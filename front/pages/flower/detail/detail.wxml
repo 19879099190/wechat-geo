@@ -1,0 +1,222 @@
+<view class="detail-container">
+  <!-- 图片轮播 -->
+  <swiper class="image-swiper" indicator-dots indicator-color="rgba(255,255,255,0.5)" indicator-active-color="#ffffff">
+    <block wx:for="{{spot.images}}" wx:key="index">
+      <swiper-item>
+      <image class="swiper-image" src="{{item}}" mode="aspectFill" bindtap="previewImage" data-index="{{index}}"></image>
+    </swiper-item>
+    </block>
+  </swiper>
+
+  <!-- 功能按钮组 -->
+  <view class="function-bar">
+    <view wx:if="{{spot.hasVideo}}" class="func-btn" bindtap="playVideo">
+      <text class="func-icon">🎬</text>
+      <text class="func-text">视频</text>
+    </view>
+    <view wx:if="{{spot.has360}}" class="func-btn" bindtap="open360Viewer">
+      <text class="func-icon">🔄</text>
+      <text class="func-text">360°</text>
+    </view>
+    <view wx:if="{{spot.hasLiveStream}}" class="func-btn live" bindtap="watchLiveStream">
+      <text class="func-icon">🔴</text>
+      <text class="func-text">云赏花</text>
+  </view>
+  </view>
+
+  <!-- 打卡区块 -->
+  <view class="checkin-section">
+    <view wx:if="{{checkInStatus}}" class="checkin-success">
+      <view class="checkin-header">
+        <text class="checkin-icon">✅</text>
+        <view class="checkin-info">
+          <text class="checkin-title">已打卡</text>
+          <text class="checkin-time">{{checkInStatus.time}}</text>
+        </view>
+      </view>
+      <image
+        wx:if="{{checkInStatus.image}}"
+        class="checkin-image"
+        src="{{checkInStatus.image}}"
+        mode="aspectFill"
+        bindtap="viewCheckInImage"
+      ></image>
+    </view>
+
+    <view wx:else class="checkin-pending">
+      <view class="checkin-status">
+        <text class="status-icon">📍</text>
+        <text class="status-text">来这里打卡留念吧</text>
+      </view>
+      <button class="checkin-btn active" bindtap="checkIn">
+        <text class="btn-icon">📸</text>
+        <text class="btn-text">拍照打卡</text>
+      </button>
+    </view>
+  </view>
+
+  <!-- 基本信息 -->
+  <view class="info-section">
+    <view class="spot-header">
+      <view class="header-left">
+        <text class="spot-name">{{spot.name}}</text>
+        <view class="spot-status {{spot.status}}">
+          {{spot.status === 'blooming' ? '🌸 盛开中' : spot.status === 'upcoming' ? '🌱 即将开放' : '🍂 已结束'}}
+        </view>
+      </view>
+      <view class="header-right">
+        <view class="rating-box">
+          <text class="rating-star">⭐</text>
+          <text class="rating-value">{{spot.rating}}</text>
+        </view>
+      </view>
+    </view>
+    
+    <view class="meta-info">
+      <view class="meta-item">
+        <text class="meta-label">花卉类型</text>
+        <text class="meta-value">{{spot.type}}</text>
+      </view>
+      <view class="meta-item">
+        <text class="meta-label">最佳观赏</text>
+        <text class="meta-value">{{spot.bestTime}}</text>
+      </view>
+      <view class="meta-item">
+        <text class="meta-label">开放时间</text>
+        <text class="meta-value">{{spot.openingHours}}</text>
+      </view>
+      <view class="meta-item">
+        <text class="meta-label">门票价格</text>
+        <text class="meta-value">{{spot.ticketPrice}}</text>
+      </view>
+    </view>
+
+    <view class="description">
+      <text class="desc-title">📝 景点介绍</text>
+      <text class="desc-content">{{spot.description}}</text>
+    </view>
+
+    <view class="features">
+      <text wx:for="{{spot.features}}" wx:key="index" wx:for-item="feature" class="feature-tag">
+        {{feature}}
+      </text>
+  </view>
+
+    <view class="view-count">
+      <text class="count-icon">👁️</text>
+      <text class="count-text">{{spot.viewCount}}人浏览过</text>
+      <text class="count-separator">·</text>
+      <text class="count-icon">📸</text>
+      <text class="count-text">{{spot.checkinCount || 0}}人打卡</text>
+    </view>
+  </view>
+
+  <!-- 设施服务 -->
+  <view class="section">
+    <text class="section-title">🏪 设施服务</text>
+    <view class="facilities">
+      <view wx:for="{{spot.facilities}}" wx:key="index" wx:for-item="facility" class="facility-item">
+        <text class="facility-icon">✓</text>
+        <text class="facility-text">{{facility}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 游玩提示 -->
+  <view class="section">
+    <text class="section-title">💡 游玩提示</text>
+    <view class="tips-box">
+      <view wx:for="{{spot.tips}}" wx:key="index" wx:for-item="tip" class="tip-item">
+        <text class="tip-bullet">•</text>
+        <text class="tip-text">{{tip}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 附近赏花点 -->
+  <view class="section">
+    <text class="section-title">📍 附近赏花点</text>
+    <view class="nearby-list">
+      <view 
+        wx:for="{{spot.nearbySpots}}" 
+        wx:key="id" 
+        wx:for-item="nearby"
+        class="nearby-item"
+        bindtap="viewNearbySpot"
+        data-id="{{nearby.id}}"
+      >
+        <text class="nearby-name">{{nearby.name}}</text>
+        <text class="nearby-distance">{{nearby.distance}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 用户评价 -->
+  <view class="section">
+    <text class="section-title">💬 用户评价</text>
+    <view class="reviews-list">
+      <view wx:for="{{spot.reviews}}" wx:key="id" wx:for-item="review" class="review-item">
+        <view class="review-header">
+          <image class="user-avatar" src="{{review.avatar}}" mode="aspectFill"></image>
+          <view class="user-info">
+            <text class="user-name">{{review.userName}}</text>
+            <view class="review-rating">
+              <text wx:for="{{review.rating}}" wx:key="index" class="star">⭐</text>
+          </view>
+          </view>
+          <text class="review-time">{{review.time}}</text>
+          </view>
+        <text class="review-content">{{review.content}}</text>
+        <view wx:if="{{review.images.length > 0}}" class="review-images">
+          <image 
+            wx:for="{{review.images}}" 
+            wx:key="index" 
+            wx:for-item="img"
+            class="review-image" 
+            src="{{img}}" 
+            mode="aspectFill"
+          ></image>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部操作栏 -->
+  <view class="bottom-bar">
+    <button class="bar-btn icon-btn" bindtap="toggleFavorite">
+      <text class="btn-icon">❤️</text>
+      <text class="btn-text">收藏</text>
+    </button>
+    <button class="bar-btn icon-btn" open-type="share">
+      <text class="btn-icon">📤</text>
+      <text class="btn-text">分享</text>
+    </button>
+    <button class="bar-btn primary-btn" bindtap="navigateToSpot">
+      <text class="btn-icon">🧭</text>
+      <text class="btn-text">导航</text>
+    </button>
+  </view>
+
+  <!-- 视频播放器 -->
+  <view wx:if="{{showVideoPlayer}}" class="video-modal">
+    <view class="modal-mask" bindtap="closeVideo"></view>
+    <view class="video-wrapper">
+      <video 
+        class="video-player" 
+        src="{{spot.videoUrl}}"
+        controls
+        autoplay
+      ></video>
+      <icon class="close-icon" type="clear" size="32" color="#ffffff" bindtap="closeVideo"></icon>
+    </view>
+  </view>
+
+  <!-- 360度浏览器 -->
+  <view wx:if="{{show360Viewer}}" class="viewer-modal">
+    <view class="modal-mask" bindtap="close360Viewer"></view>
+    <view class="viewer-wrapper">
+      <text class="viewer-placeholder">360度全景浏览功能开发中...</text>
+      <icon class="close-icon" type="clear" size="32" color="#ffffff" bindtap="close360Viewer"></icon>
+    </view>
+  </view>
+</view>

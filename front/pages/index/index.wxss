@@ -1,0 +1,143 @@
+/* pages/index/index.wxss */
+
+.container {
+  padding: 0;
+  min-height: 100vh;
+  background: #2E7D32;
+  /* background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 100%); */
+}
+
+/* 顶部横幅 */
+.banner {
+  padding: 60rpx 40rpx 40rpx;
+  text-align: center;
+  color: #ffffff;
+}
+
+.banner-title {
+  font-size: 48rpx;
+  font-weight: bold;
+  margin-bottom: 16rpx;
+}
+
+.banner-subtitle {
+  font-size: 28rpx;
+  opacity: 0.9;
+}
+
+/* 功能网格 */
+.function-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20rpx;
+  padding: 20rpx;
+  margin-top: -20rpx;
+}
+
+.function-item {
+  background-color: #ffffff;
+  border-radius: 16rpx;
+  padding: 40rpx 20rpx;
+  text-align: center;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s;
+}
+
+.function-item:active {
+  transform: scale(0.95);
+}
+
+.function-icon {
+  font-size: 60rpx;
+  margin-bottom: 16rpx;
+}
+
+.function-name {
+  font-size: 28rpx;
+  color: #333333;
+  font-weight: 500;
+}
+
+/* 卡片 */
+.card {
+  background-color: #ffffff;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  margin: 20rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.card-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333333;
+}
+
+.more-link {
+  display: flex;
+  align-items: center;
+  font-size: 24rpx;
+  color: #2E7D32;
+}
+
+.more-link .arrow {
+  font-size: 32rpx;
+  margin-left: 4rpx;
+}
+
+/* 快捷服务 */
+.service-list {
+  display: flex;
+  justify-content: space-around;
+}
+
+.service-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20rpx;
+  transition: transform 0.2s;
+}
+
+.service-item:active {
+  transform: scale(0.9);
+}
+
+.service-icon {
+  font-size: 48rpx;
+  margin-bottom: 12rpx;
+}
+
+.service-name {
+  font-size: 24rpx;
+  color: #666666;
+}
+
+/* 校园动态 */
+.news-item {
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #eeeeee;
+}
+
+.news-item:last-child {
+  border-bottom: none;
+}
+
+.news-title {
+  font-size: 28rpx;
+  color: #333333;
+  margin-bottom: 8rpx;
+}
+
+.news-time {
+  font-size: 24rpx;
+  color: #999999;
+}
+

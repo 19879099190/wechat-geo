@@ -1,0 +1,102 @@
+<view class="container">
+  <!-- 地图 -->
+  <map
+    id="map"
+    class="map"
+    latitude="{{latitude}}"
+    longitude="{{longitude}}"
+    scale="{{scale}}"
+    markers="{{markers}}"
+    circles="{{circles}}"
+    show-location
+    bindmarkertap="onMarkerTap"
+  >
+    <!-- 搜索结果数量徽章 -->
+    <cover-view wx:if="{{searchDone}}" class="result-badge">
+      <cover-view class="badge-text">
+        找到 {{poiResults.length}} 个兴趣点
+      </cover-view>
+    </cover-view>
+  </map>
+
+  <!-- 底部控制面板 -->
+  <view class="control-panel">
+    <!-- 赏花点选择 -->
+    <view class="form-item">
+      <text class="form-label">🌸 中心赏花点</text>
+      <picker
+        mode="selector"
+        range="{{flowerSpots}}"
+        range-key="name"
+        value="{{selectedSpotIndex}}"
+        bindchange="onSpotChange"
+      >
+        <view class="picker-btn">
+          <text class="picker-text">{{selectedSpot ? selectedSpot.name : '请选择赏花点'}}</text>
+          <text class="picker-arrow">▼</text>
+        </view>
+      </picker>
+    </view>
+
+    <!-- 半径选择 -->
+    <view class="form-item">
+      <text class="form-label">📏 搜索半径</text>
+      <view class="radius-options">
+        <view
+          wx:for="{{radiusOptions}}"
+          wx:key="index"
+          class="radius-btn {{selectedRadius === item ? 'active' : ''}}"
+          data-radius="{{item}}"
+          bindtap="onRadiusSelect"
+        >
+          {{item}}m
+        </view>
+      </view>
+    </view>
+
+    <!-- 搜索按钮 -->
+    <button
+      class="search-btn"
+      bindtap="doSearch"
+      disabled="{{searching || !selectedSpot}}"
+    >
+      {{searching ? '搜索中...' : '开始搜索'}}
+    </button>
+  </view>
+
+  <!-- POI 详情弹窗遮罩 -->
+  <view
+    wx:if="{{showPoiDetail}}"
+    class="poi-detail-mask"
+    bindtap="closePoiDetail"
+  ></view>
+
+  <!-- POI 详情卡片 -->
+  <view class="poi-detail {{showPoiDetail ? 'show' : ''}}">
+    <view class="detail-header">
+      <view class="detail-title-row">
+        <text class="detail-type-icon">{{selectedPoi.typeIcon}}</text>
+        <text class="detail-name">{{selectedPoi.name}}</text>
+      </view>
+      <view class="detail-close" bindtap="closePoiDetail">✕</view>
+    </view>
+    <view class="detail-body">
+      <view class="detail-row">
+        <text class="detail-label">类型</text>
+        <text class="detail-value">{{selectedPoi.typeLabel}}</text>
+      </view>
+      <view class="detail-row" wx:if="{{selectedPoi.description}}">
+        <text class="detail-label">简介</text>
+        <text class="detail-value">{{selectedPoi.description}}</text>
+      </view>
+      <view class="detail-row" wx:if="{{selectedPoi.open_time}}">
+        <text class="detail-label">开放时间</text>
+        <text class="detail-value">{{selectedPoi.open_time}}</text>
+      </view>
+      <view class="detail-row">
+        <text class="detail-label">距赏花点</text>
+        <text class="detail-value highlight">{{selectedPoi.distanceText}}</text>
+      </view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,51 @@
+<!--pages/poi/detail/detail.wxml-->
+<view class="container">
+  <view wx:if="{{loading}}" class="loading">加载中...</view>
+
+  <view wx:else>
+    <!-- 头部图片 -->
+    <view class="header-image">
+      <image wx:if="{{poi.image}}" src="{{poi.image}}" mode="aspectFill"></image>
+      <view wx:else class="placeholder">📍</view>
+    </view>
+
+    <!-- 基本信息 -->
+    <view class="info-card">
+      <view class="poi-name">{{poi.name}}</view>
+      <view class="poi-type">{{poi.type}}</view>
+      
+      <view class="rating-box">
+        <text class="rating">⭐ {{poi.rating || '暂无评分'}}</text>
+      </view>
+
+      <view class="description">{{poi.description}}</view>
+
+      <view wx:if="{{poi.open_time}}" class="open-time">
+        <text class="label">营业时间：</text>
+        <text>{{poi.open_time}}</text>
+      </view>
+    </view>
+
+    <!-- 操作按钮 -->
+    <view class="action-buttons">
+      <button class="action-btn" bindtap="navigateTo">
+        <text class="icon">📍</text>
+        <text>导航</text>
+      </button>
+      <button class="action-btn" bindtap="toggleFavorite">
+        <text class="icon">{{isFavorited ? '⭐' : '☆'}}</text>
+        <text>{{isFavorited ? '已收藏' : '收藏'}}</text>
+      </button>
+      <button class="action-btn" open-type="share">
+        <text class="icon">📤</text>
+        <text>分享</text>
+      </button>
+    </view>
+
+    <view class="ratings-section">
+      <view class="section-title">POI 点评</view>
+      <view wx:if="{{poi.comment}}" class="comment">{{poi.comment}}</view>
+      <view wx:else class="empty-ratings"><text>暂无点评</text></view>
+    </view>
+  </view>
+</view>

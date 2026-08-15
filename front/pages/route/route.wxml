@@ -1,0 +1,58 @@
+<view class="container">
+  <map 
+    id="routeMap" 
+    class="map"
+    latitude="{{centerLat}}"
+    longitude="{{centerLng}}"
+    scale="{{scale}}"
+    markers="{{markers}}"
+    polyline="{{polyline}}"
+    show-location
+  />
+
+  <view class="info-panel">
+    <view class="route-summary">
+      <view class="summary-item">
+        <text class="summary-label">距离</text>
+        <text class="summary-value">{{distance}}</text>
+      </view>
+      <view class="summary-item">
+        <text class="summary-label">时间</text>
+        <text class="summary-value">{{duration}}</text>
+      </view>
+      <view class="summary-item">
+        <text class="summary-label">方式</text>
+        <text class="summary-value">{{modeText}}</text>
+      </view>
+    </view>
+
+    <view class="steps-container">
+      <view class="steps-header">
+        <text class="steps-title">导航步骤</text>
+        <text class="steps-count">共{{steps.length}}步</text>
+      </view>
+      <scroll-view class="steps-list" scroll-y>
+        <view 
+          wx:for="{{steps}}" 
+          wx:key="index" 
+          class="step-item"
+          data-index="{{index}}"
+          bindtap="onStepTap"
+        >
+          <view class="step-number">{{index + 1}}</view>
+          <view class="step-content">
+            <text class="step-instruction">{{item.instruction}}</text>
+            <text class="step-distance">{{item.distance}}</text>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+
+  <view class="action-buttons">
+    <button class="action-btn secondary" bindtap="backToHome">返回</button>
+    <button class="action-btn secondary" bindtap="saveFrequentRoute" loading="{{saving}}">保存常用</button>
+    <button class="action-btn primary" bindtap="startNavigation">开始导航</button>
+  </view>
+</view>
+

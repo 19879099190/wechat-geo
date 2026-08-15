@@ -1,0 +1,76 @@
+<!--pages/charging/records/records.wxml-->
+<view class="container">
+  <view wx:if="{{loading}}" class="loading">
+    <view class="loading-icon">⚡</view>
+    <text>加载中...</text>
+  </view>
+
+  <view wx:elif="{{recordList.length === 0}}" class="empty">
+    <view class="empty-icon">📊</view>
+    <text class="empty-text">暂无充电记录</text>
+    <navigator url="/pages/charging/charging" class="empty-btn">
+      <text>去充电</text>
+    </navigator>
+  </view>
+
+  <view wx:else>
+    <!-- 统计信息 -->
+    <view class="stats-card">
+      <view class="stats-item">
+        <text class="stats-value">{{totalRecords}}</text>
+        <text class="stats-label">总次数</text>
+      </view>
+      <view class="stats-item">
+        <text class="stats-value">{{totalEnergy}}</text>
+        <text class="stats-label">总电量(kWh)</text>
+      </view>
+      <view class="stats-item">
+        <text class="stats-value">¥{{totalCost}}</text>
+        <text class="stats-label">总费用</text>
+      </view>
+    </view>
+
+    <!-- 记录列表 -->
+    <view class="record-list">
+      <view class="record-item" wx:for="{{recordList}}" wx:key="id">
+        <view class="item-header">
+          <view class="station-info">
+            <text class="station-icon">🔌</text>
+            <text class="station-name">{{item.station_name}}</text>
+          </view>
+          <view class="cost">¥{{item.cost || '0.00'}}</view>
+        </view>
+
+        <view class="item-content">
+          <view class="info-row">
+            <text class="label">📍 位置：</text>
+            <text class="value">{{item.location}}</text>
+          </view>
+          <view class="info-row">
+            <text class="label">🕐 开始时间：</text>
+            <text class="value">{{item.start_time}}</text>
+          </view>
+          <view class="info-row" wx:if="{{item.end_time}}">
+            <text class="label">🕐 结束时间：</text>
+            <text class="value">{{item.end_time}}</text>
+          </view>
+          <view class="info-row">
+            <text class="label">⏱ 充电时长：</text>
+            <text class="value">{{item.duration || '进行中'}}</text>
+          </view>
+          <view class="info-row" wx:if="{{item.energy}}">
+            <text class="label">⚡ 充电量：</text>
+            <text class="value">{{item.energy}} kWh</text>
+          </view>
+        </view>
+
+        <view class="item-footer">
+          <button class="detail-btn" size="mini" bindtap="viewDetail" data-id="{{item.station_id}}">
+            查看充电桩
+          </button>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
+

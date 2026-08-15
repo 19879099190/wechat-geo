@@ -1,0 +1,15 @@
+<!--pages/news/detail/detail.wxml-->
+<view class="container">
+  <view wx:if="{{newsDetail}}" class="news-detail">
+    <!-- 头部信息 -->
+    <view class="news-header">
+      <view class="news-title">{{newsDetail.title}}</view>
+      <view class="news-time">{{newsDetail.time}}</view>
+    </view>
+
+    <!-- 正文内容 -->
+    <view class="news-content">
+      <text>{{newsDetail.content}}</text>
+    </view>
+  </view>
+</view>
