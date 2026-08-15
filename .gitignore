@@ -31,5 +31,5 @@ temp/
 *.tmp
 
 # 数据库备份
-*.sql
+# *.sql
 *.dump
